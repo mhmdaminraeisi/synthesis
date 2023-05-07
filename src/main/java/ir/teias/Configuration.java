@@ -9,6 +9,7 @@ public class Configuration {
     public static final String sqlUser;
     public static final String sqlPassword;
     public static final String sqlUrl;
+    public static final String databaseCatalog;
     static {
         try {
             String filePath = new File("").getAbsolutePath();
@@ -19,6 +20,7 @@ public class Configuration {
             sqlUser = config.getProperty("spring.datasource.username");
             sqlPassword = config.getProperty("spring.datasource.password");
             sqlUrl = config.getProperty("spring.datasource.url");
+            databaseCatalog = config.getProperty("database.catalog");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
