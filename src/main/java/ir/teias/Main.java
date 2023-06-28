@@ -2,20 +2,20 @@ package ir.teias;
 
 import ir.teias.grammar.aggregator.Max;
 import ir.teias.grammar.predicate.Hole;
+import ir.teias.grammar.predicate.Predicate;
 import ir.teias.grammar.query.Aggr;
 import ir.teias.grammar.query.NamedTable;
+import ir.teias.grammar.query.Select;
 import ir.teias.grammar.value.Column;
 import ir.teias.model.Table;
 import ir.teias.model.cell.Cell;
+import ir.teias.model.cell.CellType;
 import ir.teias.model.cell.DateCell;
 import ir.teias.model.cell.IntegerCell;
-import ir.teias.synthesizer.Optimizer;
 import ir.teias.synthesizer.Synthesizer;
 
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,10 +28,11 @@ public class Main {
         Table Tout = SQLManager.evaluate(queryTout, "tout");
 
         List<Table> inputs = Arrays.asList(T1, T2);
+
         List<Cell<?>> constants = Arrays.asList(
-                new DateCell(new Date(2022, 12, 25)),
-                new DateCell(new Date(2022, 12, 24)),
-                new IntegerCell(12)
+                new DateCell(new Date(new GregorianCalendar(2022, Calendar.DECEMBER, 25).getTime().getTime())),
+                new DateCell(new Date(new GregorianCalendar(2022, Calendar.DECEMBER, 24).getTime().getTime())),
+                new IntegerCell(50)
         );
         Synthesizer synthesizer = new Synthesizer(inputs, Tout, constants);
         synthesizer.synthesis();
@@ -44,7 +45,27 @@ public class Main {
 //        SQLManager.createDBTableFromTable(newTable);
         NamedTable namedTable1 = new NamedTable(T1);
         NamedTable namedTable2 = new NamedTable(T2);
-        Aggr aggr = new Aggr(new Column("oid"), new Max("val"), namedTable2, new Hole());
+
+//        Select select = new Select(namedTable1, new Hole());
+//
+//        HashMap<CellType, List<Cell<?>>> constantsByType = new HashMap<>();
+//
+//        for (var cell : constants) {
+//            CellType type = cell.getCellType();
+//            if (!constantsByType.containsKey(type)) {
+//                constantsByType.put(type, new ArrayList<>());
+//            }
+//            constantsByType.get(type).add(cell);
+//        }
+//
+//
+//        System.out.println(select.evaluateAbstract());
+//        List<Predicate> predicates = select.enumeratePrimitivePredicates(constantsByType);
+//        for (var pred : predicates) {
+//            System.out.println(pred);
+//        }
+
+//        Aggr aggr = new Aggr(new Column("oid"), new Max("val"), namedTable2, new Hole());
 //        System.out.println(aggr.evaluateAbstract());
 //        System.out.println(aggr.evaluate());
 //        System.out.println(namedTable2.getTable());
@@ -53,8 +74,8 @@ public class Main {
 //        hashMap.put("salam", 3);
 //        hashMap.put("chetori", 6);
 //        System.out.println(hashMap.values().stream().toList().toString());
-        Table test1 = SQLManager.evaluate("select * from test1", "test1");
-        Table test2 = SQLManager.evaluate("select * from test2", "test2");
+//        Table test1 = SQLManager.evaluate("select * from test1", "test1");
+//        Table test2 = SQLManager.evaluate("select * from test2", "test2");
         SQLManager.deleteCreatedTables();
     }
 }

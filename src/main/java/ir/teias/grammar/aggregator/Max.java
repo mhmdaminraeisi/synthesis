@@ -36,7 +36,7 @@ public class Max extends OneArgAggregator {
     public Table evaluateAbstract(Aggr aggr) {
         Table deDuplicatedTable = SQLManager.deDuplicate(aggr.getQuery().evaluateAbstract(), aggr.getQueryName());
         deDuplicatedTable.getColumns().clear();
-        deDuplicatedTable.getColumns().addAll(Arrays.asList(aggr.getColumn().toString(), newColumnName()));
+        deDuplicatedTable.getColumns().addAll(Arrays.asList(aggr.getColumn().getColumnName().toString(), newColumnName()));
         deDuplicatedTable.getColumnTypes().put(newColumnName(), deDuplicatedTable.getColumnTypes().get(argColumn));
         for (Row row : deDuplicatedTable.getRows()) {
             row.cells().put(newColumnName(), row.cells().get(argColumn));

@@ -10,7 +10,7 @@ import java.util.List;
  * @param cells is mapping from columnName to Cell
  */
 public record Row(HashMap<String, Cell<?>> cells) {
-    public String presentation(List<String> columns) {
+    public String representation(List<String> columns) {
         return columns.stream().map(c -> cells.get(c).getValue().toString()).toList().toString();
     }
 }

@@ -1,8 +1,11 @@
 package ir.teias.model;
 
+import ir.teias.SQLManager;
+import ir.teias.Utils;
 import ir.teias.model.cell.CellType;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -13,8 +16,9 @@ public class Table {
     private final List<String> columns;
     private final HashMap<String, CellType> columnTypes;
     private final List<Row> rows;
+    private final List<String> rowsRepresentation = new ArrayList<>();
 
-    private final HashMap<String, Integer> rowsCount = new HashMap<>();
+    private final HashMap<String, Integer> rowsOccur = new HashMap<>();
     /**
      * @param columns     is list of columnNames;
      * @param columnTypes is mapping from columnName to CellType
@@ -25,11 +29,12 @@ public class Table {
         this.columnTypes = columnTypes;
         this.rows = rows;
         for (Row row : rows) {
-            String rep = row.presentation(columns);
-            if (rowsCount.containsKey(rep)) {
-                rowsCount.put(rep, rowsCount.get(rep) + 1);
+            String rep = row.representation(columns);
+            rowsRepresentation.add(rep);
+            if (rowsOccur.containsKey(rep)) {
+                rowsOccur.put(rep, rowsOccur.get(rep) + 1);
             } else {
-                rowsCount.put(rep, 1);
+                rowsOccur.put(rep, 1);
             }
         }
     }
@@ -50,18 +55,32 @@ public class Table {
             rs.append(r);
         }
 
-        return "Table " + name + " ( " + cls + ")\n" + rs;
+        return "Table " + name + "\n( " + cls + ")\n" + rs;
     }
 
+    public boolean containsRow(Row row) {
+        return containsRow(row.representation(columns));
+    }
+
+    public int getRowOccur(String rowRepresentation) {
+        if (rowsOccur.containsKey(rowRepresentation)) {
+            return rowsOccur.get(rowRepresentation);
+        }
+        return 0;
+    }
+
+    public boolean containsRow(String rowRepresentation) {
+        return rowsOccur.containsKey(rowRepresentation);
+    }
     public boolean contains(Table that) {
         if (!hasSameSchema(that)) {
             return false;
         }
-        for (var entry : that.getRowsCount().entrySet()) {
-            if (!rowsCount.containsKey(entry.getKey())) {
+        for (var entry : that.getRowsOccur().entrySet()) {
+            if (!rowsOccur.containsKey(entry.getKey())) {
                 return false;
             }
-            if (rowsCount.get(entry.getKey()) < entry.getValue()) {
+            if (rowsOccur.get(entry.getKey()) < entry.getValue()) {
                 return false;
             }
         }
@@ -79,14 +98,14 @@ public class Table {
         if (rows.size() != that.getRows().size()) {
             return false;
         }
-        if (rowsCount.size() != that.getRowsCount().size()) {
+        if (rowsOccur.size() != that.getRowsOccur().size()) {
             return false;
         }
-        for (var entry : rowsCount.entrySet()) {
-            if (!that.getRowsCount().containsKey(entry.getKey())) {
+        for (var entry : rowsOccur.entrySet()) {
+            if (!that.getRowsOccur().containsKey(entry.getKey())) {
                 return false;
             }
-            if (!Objects.equals(that.getRowsCount().get(entry.getKey()), entry.getValue())) {
+            if (!Objects.equals(that.getRowsOccur().get(entry.getKey()), entry.getValue())) {
                 return false;
             }
         }
@@ -104,5 +123,12 @@ public class Table {
             }
         }
         return true;
+    }
+
+    public void saveToDb() {
+        SQLManager.createDBTableFromTable(this);
+    }
+    public Table duplicate() {
+        return new Table(Utils.generateRandomString(6), columns, columnTypes, rows);
     }
 }

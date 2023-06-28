@@ -8,4 +8,9 @@ import lombok.RequiredArgsConstructor;
 public abstract class Cell<T> {
     protected final T value;
     protected final CellType cellType;
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

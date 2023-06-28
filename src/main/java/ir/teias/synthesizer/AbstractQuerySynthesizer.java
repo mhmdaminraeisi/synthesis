@@ -26,7 +26,8 @@ public class AbstractQuerySynthesizer {
         List<Query> newQueries = new ArrayList<>();
         for (Table table : inputs) {
             NamedTable namedTable = new NamedTable(table);
-            newQueries.add(namedTable);
+            newQueries.add(new Select(namedTable, new Hole()));
+//            newQueries.add(namedTable);
         }
         List<Query> abstractQueries = new ArrayList<>(newQueries);
         List<Query> preQueries = new ArrayList<>();
@@ -45,6 +46,7 @@ public class AbstractQuerySynthesizer {
             preQueries = new ArrayList<>(abstractQueries);
             abstractQueries.addAll(newQueries);
         }
+//        return abstractQueries;
         return filterCandidates(abstractQueries);
     }
     private List<Query> enumOneStepAbstractQuery(List<Query> newQueries, List<Query> preQueries) {
@@ -100,7 +102,7 @@ public class AbstractQuerySynthesizer {
                     if (i == j) {
                         continue;
                     }
-                    queries.add(new Aggr(new Column(table.getColumns().get(i)), new Max(table.getColumns().get(j)), query, new Hole()));
+                    queries.add(new Aggr(new Column(table.getColumns().get(i), table.getName()), new Max(table.getColumns().get(j)), query, new Hole()));
                     // TODO
                 }
             }

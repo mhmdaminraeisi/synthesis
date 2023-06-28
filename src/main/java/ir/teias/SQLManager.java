@@ -1,5 +1,6 @@
 package ir.teias;
 
+import ir.teias.grammar.query.Select;
 import ir.teias.model.Row;
 import ir.teias.model.Table;
 import ir.teias.model.cell.*;
@@ -113,6 +114,7 @@ public class SQLManager {
                 statement.executeUpdate(insertQuery);
             }
         } catch (SQLException e) {
+            System.out.println(table);
             throw new RuntimeException(e);
         }
     }
