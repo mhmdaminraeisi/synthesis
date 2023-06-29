@@ -1,13 +1,9 @@
 package ir.teias.synthesizer;
 
-import ir.teias.grammar.aggregator.Max;
-import ir.teias.grammar.predicate.Hole;
-import ir.teias.grammar.query.*;
-import ir.teias.grammar.value.Column;
+import ir.teias.grammar.query.Query;
 import ir.teias.model.Table;
 import ir.teias.model.cell.Cell;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Synthesizer {

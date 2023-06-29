@@ -1,9 +1,7 @@
 package ir.teias.grammar.query;
 
 import ir.teias.grammar.binop.Equal;
-import ir.teias.grammar.binop.GreaterThan;
 import ir.teias.grammar.binop.LessThan;
-import ir.teias.grammar.binop.LessThanEqual;
 import ir.teias.grammar.predicate.BinaryOperator;
 import ir.teias.grammar.predicate.Or;
 import ir.teias.grammar.predicate.Predicate;
@@ -30,6 +28,7 @@ public abstract class QueryWithPredicate extends Query {
     protected HashMap<CellType, List<Cell<?>>> constantsByType;
 
     public abstract QueryWithPredicate duplicateWithNewPredicate(Predicate predicate);
+
     public abstract List<Predicate> enumeratePrimitivePredicates();
 
     public List<Predicate> enumerateBinOpPredicates(List<Value> lefts, List<Value> rights, boolean isSame, boolean isId) {

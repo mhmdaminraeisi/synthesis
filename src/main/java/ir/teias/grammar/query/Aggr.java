@@ -5,19 +5,15 @@ import ir.teias.grammar.aggregator.Aggregator;
 import ir.teias.grammar.predicate.Predicate;
 import ir.teias.grammar.predicate.True;
 import ir.teias.grammar.value.Column;
-import ir.teias.grammar.value.Const;
-import ir.teias.grammar.value.Value;
 import ir.teias.model.BitVector;
 import ir.teias.model.Table;
 import ir.teias.model.cell.Cell;
 import ir.teias.model.cell.CellType;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class Aggr extends QueryWithPredicate {
@@ -39,7 +35,7 @@ public class Aggr extends QueryWithPredicate {
             queryString = "( " + queryString + " )";
         }
         return "SELECT " + column.getColumnName() + ", " + aggregator.toString() + " FROM "
-                + queryString + " " + query.getQueryName() + " GROUP BY " +  column.getColumnName() + " HAVING " + predicate.toString();
+                + queryString + " " + query.getQueryName() + " GROUP BY " + column.getColumnName() + " HAVING " + predicate.toString();
     }
 
     @Override

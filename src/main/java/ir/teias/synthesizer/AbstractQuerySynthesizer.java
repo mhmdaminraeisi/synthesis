@@ -49,6 +49,7 @@ public class AbstractQuerySynthesizer {
 //        return abstractQueries;
         return filterCandidates(abstractQueries);
     }
+
     private List<Query> enumOneStepAbstractQuery(List<Query> newQueries, List<Query> preQueries) {
         List<Query> generatedAbstractQueries = new ArrayList<>();
 

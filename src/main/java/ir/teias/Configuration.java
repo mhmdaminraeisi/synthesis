@@ -10,6 +10,7 @@ public class Configuration {
     public static final String sqlPassword;
     public static final String sqlUrl;
     public static final String databaseCatalog;
+
     static {
         try {
             String filePath = new File("").getAbsolutePath();

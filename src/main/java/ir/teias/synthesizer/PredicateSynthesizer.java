@@ -1,7 +1,5 @@
 package ir.teias.synthesizer;
 
-import ir.teias.grammar.predicate.Predicate;
-import ir.teias.grammar.query.Join;
 import ir.teias.grammar.query.Query;
 import ir.teias.grammar.query.QueryWithPredicate;
 import ir.teias.model.BitVector;
@@ -12,7 +10,6 @@ import ir.teias.model.cell.CellType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PredicateSynthesizer {
     private final List<Table> inputs;

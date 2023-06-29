@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class Query {
     private Table abstractTable = null;
     private final String queryName = Utils.generateRandomString(6);
+
     public Table evaluate() {
         return SQLManager.evaluate(this.toString(), queryName);
     }
@@ -25,6 +26,7 @@ public abstract class Query {
         }
         return abstractTable;
     }
+
     public abstract Table evaluateAbstract();
 
     public HashMap<CellType, List<String>> getColumnsByType() {
@@ -48,6 +50,7 @@ public abstract class Query {
                 .filter(column -> column.contains("id") || column.contains("Id"))
                 .toList();
     }
+
     public abstract List<BitVector> bitVectorDFS();
 
     protected List<BitVector> filterEquivalentBitVectors(List<BitVector> bitVectors) {

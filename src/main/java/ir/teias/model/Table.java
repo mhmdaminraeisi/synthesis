@@ -19,6 +19,7 @@ public class Table {
     private final List<String> rowsRepresentation = new ArrayList<>();
 
     private final HashMap<String, Integer> rowsOccur = new HashMap<>();
+
     /**
      * @param columns     is list of columnNames;
      * @param columnTypes is mapping from columnName to CellType
@@ -72,6 +73,7 @@ public class Table {
     public boolean containsRow(String rowRepresentation) {
         return rowsOccur.containsKey(rowRepresentation);
     }
+
     public boolean contains(Table that) {
         if (!hasSameSchema(that)) {
             return false;
@@ -128,6 +130,7 @@ public class Table {
     public void saveToDb() {
         SQLManager.createDBTableFromTable(this);
     }
+
     public Table duplicate() {
         return new Table(Utils.generateRandomString(6), columns, columnTypes, rows);
     }

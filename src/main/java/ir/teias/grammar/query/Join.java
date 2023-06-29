@@ -36,8 +36,7 @@ public class Join extends QueryWithPredicate {
         if (!(right instanceof NamedTable)) {
             rightString = "( " + rightString + " )";
         }
-        return "SELECT * FROM " + leftString + " " + left.getQueryName() + " JOIN "
-                + rightString + " " + right.getQueryName() + " ON " + predicate.toString();
+        return "SELECT * FROM " + leftString + " " + left.getQueryName() + " JOIN " + rightString + " " + right.getQueryName() + " ON " + predicate.toString();
     }
 
     @Override
@@ -49,8 +48,7 @@ public class Join extends QueryWithPredicate {
         Table rightTable = right.evaluateAbstract();
         leftTable.saveToDb();
         rightTable.saveToDb();
-        String dbQuery = "SELECT * FROM " + leftTable.getName() + " " + left.getQueryName()
-                + " JOIN " + rightTable.getName() + " " + right.getQueryName() + " ON " + predicate.toString();
+        String dbQuery = "SELECT * FROM " + leftTable.getName() + " " + left.getQueryName() + " JOIN " + rightTable.getName() + " " + right.getQueryName() + " ON " + predicate.toString();
         return SQLManager.evaluate(dbQuery, getQueryName());
     }
 
@@ -66,8 +64,7 @@ public class Join extends QueryWithPredicate {
             for (BitVector bvRight : bitVectorsRight) {
                 ArrayList<Boolean> product = bvLeft.crossProduct(bvRight.getVector());
                 for (BitVector bv : bitVectors) {
-                    Join newJoin = new Join(bvLeft.getQuery(), bvRight.getQuery(),
-                            ((QueryWithPredicate) bv.getQuery()).getPredicate());
+                    Join newJoin = new Join(bvLeft.getQuery(), bvRight.getQuery(), ((QueryWithPredicate) bv.getQuery()).getPredicate());
                     res.add(new BitVector(bv.and(product), newJoin, getAbstractTable()));
                 }
             }
@@ -96,12 +93,8 @@ public class Join extends QueryWithPredicate {
             }
             List<String> leftColumns = entry.getValue();
             List<String> rightColumns = rightColumnsByType.get(entry.getKey());
-            List<Value> leftColumnValues = leftColumns.stream()
-                    .map(col -> new Column(col, left.getQueryName()))
-                    .collect(Collectors.toList());
-            List<Value> rightColumnValues = rightColumns.stream()
-                    .map(col -> new Column(col, right.getQueryName()))
-                    .collect(Collectors.toList());
+            List<Value> leftColumnValues = leftColumns.stream().map(col -> new Column(col, left.getQueryName())).collect(Collectors.toList());
+            List<Value> rightColumnValues = rightColumns.stream().map(col -> new Column(col, right.getQueryName())).collect(Collectors.toList());
 
             primitivesPredicates.addAll(enumerateBinOpPredicates(leftColumnValues, rightColumnValues, false, false));
         }

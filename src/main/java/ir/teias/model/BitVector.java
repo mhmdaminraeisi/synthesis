@@ -2,10 +2,7 @@ package ir.teias.model;
 
 import ir.teias.Utils;
 import ir.teias.grammar.query.Query;
-import ir.teias.model.Row;
-import ir.teias.model.Table;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +26,7 @@ public class BitVector {
         this.initAbstractTable = initAbstractTable;
         vector.addAll(vc);
     }
+
     private void encode(Table table) {
         if (!initAbstractTable.contains(table)) {
             vector.addAll(new ArrayList<Boolean>(

@@ -1,6 +1,5 @@
 package ir.teias;
 
-import ir.teias.grammar.query.Select;
 import ir.teias.model.Row;
 import ir.teias.model.Table;
 import ir.teias.model.cell.*;
@@ -63,16 +62,18 @@ public class SQLManager {
             throw new RuntimeException(e);
         }
     }
+
     public static Table deDuplicate(Table table, String name) {
         SQLManager.createDBTableFromTable(table);
         String columns = String.join(", ", table.getColumns());
         String query = "SELECT " + columns + " FROM " + table.getName() + " GROUP BY " + columns;
         return evaluate(query, name);
     }
+
     public static boolean isTableExists(String tableName) {
         try {
             DatabaseMetaData meta = connection.getMetaData();
-            ResultSet resultSet = meta.getTables(null, null, tableName, new String[] {"TABLE"});
+            ResultSet resultSet = meta.getTables(null, null, tableName, new String[]{"TABLE"});
             return resultSet.next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -118,6 +119,7 @@ public class SQLManager {
             throw new RuntimeException(e);
         }
     }
+
     public static void deleteCreatedTables() {
         try {
             DatabaseMetaData metaData = connection.getMetaData();

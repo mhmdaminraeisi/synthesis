@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
  * @param cells is mapping from columnName to Cell
  */
 public record Row(HashMap<String, Cell<?>> cells) {

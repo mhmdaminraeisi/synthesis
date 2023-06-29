@@ -1,21 +1,17 @@
 package ir.teias;
 
-import ir.teias.grammar.aggregator.Max;
-import ir.teias.grammar.predicate.Hole;
-import ir.teias.grammar.predicate.Predicate;
-import ir.teias.grammar.query.Aggr;
 import ir.teias.grammar.query.NamedTable;
-import ir.teias.grammar.query.Select;
-import ir.teias.grammar.value.Column;
 import ir.teias.model.Table;
 import ir.teias.model.cell.Cell;
-import ir.teias.model.cell.CellType;
 import ir.teias.model.cell.DateCell;
 import ir.teias.model.cell.IntegerCell;
 import ir.teias.synthesizer.Synthesizer;
 
 import java.sql.Date;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
