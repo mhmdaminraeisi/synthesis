@@ -1,6 +1,7 @@
 package ir.teias.grammar.query;
 
 import ir.teias.SQLManager;
+import ir.teias.grammar.predicate.BinaryOperator;
 import ir.teias.grammar.predicate.Predicate;
 import ir.teias.grammar.value.Column;
 import ir.teias.grammar.value.Value;
@@ -53,6 +54,24 @@ public class Join extends QueryWithPredicate {
     }
 
     @Override
+    public String display(int depth) {
+        String leftDisplay = left.display(depth + 1);
+        if (!(left instanceof NamedTable)) {
+            leftDisplay = "(" + leftDisplay + ") " + left.getQueryName();
+        }
+        String rightDisplay = right.display(depth + 1);
+        if (!(right instanceof NamedTable)) {
+            rightDisplay = "(" + rightDisplay + ") " + right.getQueryName();
+        }
+        String tab = "\t".repeat(depth * 2);
+        StringBuilder builder = new StringBuilder("SELECT *\n");
+        builder.append(tab).append("FROM   ").append(leftDisplay).append("\n");
+        builder.append(tab).append("JOIN   ").append(rightDisplay).append("\n");
+        builder.append(tab).append("ON     ").append(predicate);
+        return builder.toString();
+    }
+
+    @Override
     public List<BitVector> bitVectorDFS() {
         List<Predicate> predicates = enumAndGroupPredicates();
         List<BitVector> bitVectors = encodeFiltersToBitVectors(predicates);
@@ -64,7 +83,10 @@ public class Join extends QueryWithPredicate {
             for (BitVector bvRight : bitVectorsRight) {
                 ArrayList<Boolean> product = bvLeft.crossProduct(bvRight.getVector());
                 for (BitVector bv : bitVectors) {
-                    Join newJoin = new Join(bvLeft.getQuery(), bvRight.getQuery(), ((QueryWithPredicate) bv.getQuery()).getPredicate());
+                    Query lQuery = bvLeft.getQuery();
+                    Query rQuery = bvRight.getQuery();
+                    Predicate pred = updatePredicate(((QueryWithPredicate) bv.getQuery()).getPredicate(), lQuery, rQuery);
+                    Join newJoin = new Join(lQuery, rQuery, pred);
                     res.add(new BitVector(bv.and(product), newJoin, getAbstractTable()));
                 }
             }
@@ -116,5 +138,18 @@ public class Join extends QueryWithPredicate {
         if (right instanceof QueryWithPredicate) {
             ((QueryWithPredicate) right).setConstantsByType(constantsByType);
         }
+    }
+
+    private Predicate updatePredicate(Predicate predicate, Query leftQuery, Query rightQuery) {
+        if (!(predicate instanceof BinaryOperator binOp)) {
+            return predicate;
+        }
+        Value leftValue = binOp.getLeft() instanceof Column
+                ? new Column(((Column) binOp.getLeft()).getColumnName(), leftQuery.getQueryName())
+                : binOp.getLeft();
+        Value rightValue = binOp.getRight() instanceof Column
+                ? new Column(((Column) binOp.getRight()).getColumnName(), rightQuery.getQueryName())
+                : binOp.getRight();
+        return new BinaryOperator(leftValue, rightValue, binOp.getBinOp());
     }
 }

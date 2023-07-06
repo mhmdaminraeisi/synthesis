@@ -6,6 +6,7 @@ import ir.teias.grammar.predicate.BinaryOperator;
 import ir.teias.grammar.predicate.Or;
 import ir.teias.grammar.predicate.Predicate;
 import ir.teias.grammar.predicate.True;
+import ir.teias.grammar.value.Column;
 import ir.teias.grammar.value.Value;
 import ir.teias.model.BitVector;
 import ir.teias.model.Table;

@@ -29,6 +29,8 @@ public abstract class Query {
 
     public abstract Table evaluateAbstract();
 
+    public abstract String display(int depth);
+
     public HashMap<CellType, List<String>> getColumnsByType() {
         Table absTable = getAbstractTable();
         HashMap<CellType, List<String>> columnsByType = new HashMap<>();

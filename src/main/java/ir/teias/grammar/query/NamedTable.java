@@ -33,6 +33,11 @@ public class NamedTable extends Query {
     }
 
     @Override
+    public String display(int depth) {
+        return toString();
+    }
+
+    @Override
     public List<BitVector> bitVectorDFS() {
         return List.of(new BitVector(this, getAbstractTable(), true));
     }

@@ -1,5 +1,6 @@
 package ir.teias.synthesizer;
 
+import ir.teias.Utils;
 import ir.teias.grammar.query.Query;
 import ir.teias.grammar.query.QueryWithPredicate;
 import ir.teias.model.BitVector;
@@ -48,9 +49,5 @@ public class PredicateSynthesizer {
         List<BitVector> bitVectors = abstractQueries.get(1).bitVectorDFS()
                 .stream().filter(bitVector -> bitVector.decode().equals(output)).toList();
 
-        for (BitVector bitVector : bitVectors) {
-            System.out.println(bitVector);
-            System.out.println("--------------------");
-        }
     }
 }

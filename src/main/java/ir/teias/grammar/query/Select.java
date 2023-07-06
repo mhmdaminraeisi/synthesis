@@ -45,6 +45,19 @@ public class Select extends QueryWithPredicate {
     }
 
     @Override
+    public String display(int depth) {
+        String queryDisplay = query.display(depth + 1);
+        if (!(query instanceof NamedTable)) {
+            queryDisplay = "(" + queryDisplay + ") AS " + query.getQueryName();
+        }
+        String tab = "\t".repeat(depth * 2);
+        StringBuilder builder = new StringBuilder("SELECT *\n");
+        builder.append(tab).append("FROM   ").append(queryDisplay).append("\n");
+        builder.append(tab).append("WHERE  ").append(predicate);
+        return builder.toString();
+    }
+
+    @Override
     public List<BitVector> bitVectorDFS() {
         List<Predicate> predicates = enumAndGroupPredicates();
         List<BitVector> bitVectors = encodeFiltersToBitVectors(predicates);

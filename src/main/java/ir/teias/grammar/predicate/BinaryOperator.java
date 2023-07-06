@@ -2,8 +2,10 @@ package ir.teias.grammar.predicate;
 
 import ir.teias.grammar.binop.BinOp;
 import ir.teias.grammar.value.Value;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public class BinaryOperator extends Predicate {
     private final Value left;

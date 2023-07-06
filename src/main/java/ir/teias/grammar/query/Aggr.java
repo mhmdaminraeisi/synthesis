@@ -47,6 +47,20 @@ public class Aggr extends QueryWithPredicate {
     }
 
     @Override
+    public String display(int depth) {
+        String queryDisplay = query.display(depth + 1);
+        if (!(query instanceof NamedTable)) {
+            queryDisplay = "(" + queryDisplay + ") " + query.getQueryName();
+        }
+        String tab = "\t".repeat(depth * 2);
+        StringBuilder builder = new StringBuilder("SELECT " + column.getColumnName() + ", " + aggregator.toString() + "\n");
+        builder.append(tab).append("FROM   ").append(queryDisplay).append("\n");
+        builder.append(tab).append("GROUP BY ").append(column.getColumnName()).append("\n");
+        builder.append(tab).append("HAVING ").append(predicate);
+        return builder.toString();
+    }
+
+    @Override
     public List<BitVector> bitVectorDFS() {
         List<Predicate> predicates = enumAndGroupPredicates();
         List<BitVector> bitVectors = encodeFiltersToBitVectors(predicates);
