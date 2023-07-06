@@ -127,9 +127,7 @@ public class SQLManager {
             ResultSet resultSet = metaData.getTables(Configuration.databaseCatalog, null, "%", null);
             while (resultSet.next()) {
                 String tableName = resultSet.getString("TABLE_NAME");
-                if (tableName.length() == 6) {
-                    statement.executeUpdate("DROP TABLE " + tableName);
-                }
+                statement.executeUpdate("DROP TABLE " + tableName);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

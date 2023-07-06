@@ -1,6 +1,7 @@
 package ir.teias.synthesizer;
 
 
+import ir.teias.grammar.aggregator.Aggregator;
 import ir.teias.grammar.aggregator.Max;
 import ir.teias.grammar.predicate.Hole;
 import ir.teias.grammar.query.*;
@@ -15,6 +16,7 @@ import java.util.List;
 public class AbstractQuerySynthesizer {
     private final List<Table> inputs;
     private final Table output;
+    private final List<String> aggregators;
 
     public List<Query> filterCandidates(List<Query> queries) {
         return queries.stream().filter(
@@ -103,8 +105,13 @@ public class AbstractQuerySynthesizer {
                     if (i == j) {
                         continue;
                     }
-                    queries.add(new Aggr(new Column(table.getColumns().get(i), table.getName()), new Max(table.getColumns().get(j)), query, new Hole()));
-                    // TODO
+                    for (String aggr : aggregators) {
+                        Aggregator aggregator = null;
+                        switch (aggr) {
+                            case "MAX" -> aggregator = new Max(table.getColumns().get(j));
+                        }
+                        queries.add(new Aggr(new Column(table.getColumns().get(i), table.getName()), aggregator, query, new Hole()));
+                    }
                 }
             }
             generatedAbstractQueries.addAll(queries);

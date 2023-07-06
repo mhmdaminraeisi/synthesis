@@ -3,23 +3,19 @@ package ir.teias.synthesizer;
 import ir.teias.grammar.query.Query;
 import ir.teias.model.Table;
 import ir.teias.model.cell.Cell;
+import ir.teias.model.cell.CellType;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Synthesizer {
-    private final List<Table> inputs;
-    private final Table output;
-    private final List<Cell<?>> constants;
     private final AbstractQuerySynthesizer abstractQuerySynthesizer;
 
     private final PredicateSynthesizer predicateSynthesizer;
 
-    public Synthesizer(List<Table> inputs, Table output, List<Cell<?>> constants) {
-        this.inputs = inputs;
-        this.output = output;
-        this.constants = constants;
-        this.abstractQuerySynthesizer = new AbstractQuerySynthesizer(inputs, output);
-        this.predicateSynthesizer = new PredicateSynthesizer(inputs, output, constants);
+    public Synthesizer(List<Table> inputs, Table output, HashMap<CellType, List<Cell<?>>> constantsByType, List<String> aggregators) {
+        this.abstractQuerySynthesizer = new AbstractQuerySynthesizer(inputs, output, aggregators);
+        this.predicateSynthesizer = new PredicateSynthesizer(output, constantsByType);
     }
 
 
