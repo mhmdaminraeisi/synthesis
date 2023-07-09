@@ -2,10 +2,7 @@ package ir.teias.synthesizer;
 
 
 import ir.teias.Utils;
-import ir.teias.grammar.aggregator.Aggregator;
-import ir.teias.grammar.aggregator.Count;
-import ir.teias.grammar.aggregator.Max;
-import ir.teias.grammar.aggregator.Sum;
+import ir.teias.grammar.aggregator.*;
 import ir.teias.grammar.predicate.Hole;
 import ir.teias.grammar.query.*;
 import ir.teias.grammar.value.Column;
@@ -172,6 +169,12 @@ public class AbstractQuerySynthesizer {
                                     continue;
                                 }
                                 aggregator = new Max(argColumn);
+                            }
+                            case "MIN" -> {
+                                if (table.getColumnTypes().get(argColumn).equals(CellType.STRING)) {
+                                    continue;
+                                }
+                                aggregator = new Min(argColumn);
                             }
                             case "SUM" -> {
                                 if (!table.getColumnTypes().get(argColumn).equals(CellType.INTEGER)) {

@@ -27,13 +27,8 @@ public class Synthesizer {
         List<Query> solutions = new ArrayList<>();
         while (solutions.size() == 0) {
             System.out.println("Search for depth = " + depth);
-            List<Query> candidates = abstractQuerySynthesizer.synthesisAbstractQueries(depth);
-            if (candidates.size() > 0) {
-                for (var khar : candidates) {
-                    System.out.println(khar);
-                }
-            }
-            solutions.addAll(predicateSynthesizer.synthesisPredicates(candidates));
+            List<Query> candidateAbstractQueries = abstractQuerySynthesizer.synthesisAbstractQueries(depth);
+            solutions.addAll(predicateSynthesizer.synthesisPredicates(candidateAbstractQueries));
             depth += 1;
         }
 
