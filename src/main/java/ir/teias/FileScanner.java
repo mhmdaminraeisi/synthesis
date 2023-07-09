@@ -79,7 +79,9 @@ public class FileScanner {
             List<String> aggrFunctions = Arrays.stream(line.split("[=]")[1].replaceAll("[{}\s]", "").split("[,]"))
                     .filter(s -> s.length() > 0).toList();
 
-            return new InputAPI(inputTables, output, constantsByType, aggrFunctions);
+            line = br.readLine();
+            boolean useProjection = line.split("=")[1].replaceAll("[{}\s]", "").equals("true");
+            return new InputAPI(inputTables, output, constantsByType, aggrFunctions, useProjection);
         }
     }
 

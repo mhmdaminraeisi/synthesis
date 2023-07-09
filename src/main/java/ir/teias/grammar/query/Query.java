@@ -6,18 +6,29 @@ import ir.teias.model.BitVector;
 import ir.teias.model.Table;
 import ir.teias.model.cell.CellType;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Getter
+@RequiredArgsConstructor
 public abstract class Query {
     private Table abstractTable = null;
+    private Table abstractTableFull = null;
     private final String queryName = Utils.generateRandomString(6);
+    protected final List<String> projectColumns;
+    protected boolean isFullVersion = false;
 
     public Table evaluate() {
         return SQLManager.evaluate(this.toString(), queryName);
+    }
+    public Table evaluateFull() {
+        isFullVersion = true;
+        Table res = evaluate();
+        isFullVersion = false;
+        return res;
     }
 
     public Table getAbstractTable() {
@@ -27,7 +38,20 @@ public abstract class Query {
         return abstractTable;
     }
 
+    public Table getAbstractTableFull() {
+        if (abstractTableFull == null) {
+            abstractTableFull = this.evaluateAbstractFull();
+        }
+        return abstractTableFull;
+    }
+
     public abstract Table evaluateAbstract();
+    public Table evaluateAbstractFull() {
+        isFullVersion = true;
+        Table res = evaluateAbstract();
+        isFullVersion = false;
+        return res;
+    }
 
     public abstract String display(int depth);
 

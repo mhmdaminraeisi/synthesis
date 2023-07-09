@@ -1,14 +1,18 @@
 package ir.teias.grammar.predicate;
 
-import lombok.RequiredArgsConstructor;
+public class Or extends ComposePredicate {
 
-@RequiredArgsConstructor
-public class Or extends Predicate {
-    private final Predicate left;
-    private final Predicate right;
+    public Or(Predicate left, Predicate right) {
+        super(left, right);
+    }
 
     @Override
     public String toString() {
         return "(" + left.toString() + " OR " + right.toString() + ")";
+    }
+
+    @Override
+    public ComposePredicate duplicateWithNewPredicates(Predicate left, Predicate right) {
+        return new Or(left, right);
     }
 }

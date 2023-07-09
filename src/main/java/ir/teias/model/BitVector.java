@@ -13,35 +13,38 @@ import java.util.List;
 public class BitVector {
     private final Query query;
     private final Table initAbstractTable;
+    private final Table initAbstractTableFull;
     private final ArrayList<Boolean> vector = new ArrayList<>();
 
-    public BitVector(Query query, Table initAbstractTable, boolean encodeAbstract) {
+    public BitVector(Query query, Table initAbstractTable, Table initAbstractTableFull, boolean encodeAbstract) {
         this.query = query;
         this.initAbstractTable = initAbstractTable;
-        this.encode(encodeAbstract ? query.evaluateAbstract() : query.evaluate());
+        this.initAbstractTableFull = initAbstractTableFull;
+        this.encode(encodeAbstract ? query.evaluateAbstractFull() : query.evaluateFull());
     }
 
-    public BitVector(ArrayList<Boolean> vc, Query query, Table initAbstractTable) {
+    public BitVector(ArrayList<Boolean> vc, Query query, Table initAbstractTable, Table initAbstractTableFull) {
         this.query = query;
         this.initAbstractTable = initAbstractTable;
+        this.initAbstractTableFull = initAbstractTableFull;
         vector.addAll(vc);
     }
 
-    private void encode(Table table) {
-        if (!initAbstractTable.contains(table)) {
+    private void encode(Table tableFull) {
+        if (!initAbstractTableFull.contains(tableFull)) {
             vector.addAll(new ArrayList<Boolean>(
                     Collections.nCopies(initAbstractTable.getRows().size(), false)));
             return;
         }
-        HashMap<String, Integer> occursInAbstractTable = new HashMap<>();
+        HashMap<String, Integer> occursInAbstractTableFull = new HashMap<>();
 
-        for (String repRow : initAbstractTable.getRowsRepresentation()) {
-            if (!occursInAbstractTable.containsKey(repRow)) {
-                occursInAbstractTable.put(repRow, 0);
+        for (String repRow : initAbstractTableFull.getRowsRepresentation()) {
+            if (!occursInAbstractTableFull.containsKey(repRow)) {
+                occursInAbstractTableFull.put(repRow, 0);
             }
-            int occurs = occursInAbstractTable.get(repRow);
-            vector.add(table.containsRow(repRow) && occurs < table.getRowOccur(repRow));
-            occursInAbstractTable.put(repRow, occurs + 1);
+            int occurs = occursInAbstractTableFull.get(repRow);
+            vector.add(tableFull.containsRow(repRow) && occurs < tableFull.getRowOccur(repRow));
+            occursInAbstractTableFull.put(repRow, occurs + 1);
         }
     }
 

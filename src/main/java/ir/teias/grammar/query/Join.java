@@ -1,8 +1,7 @@
 package ir.teias.grammar.query;
 
 import ir.teias.SQLManager;
-import ir.teias.grammar.predicate.BinaryOperator;
-import ir.teias.grammar.predicate.Predicate;
+import ir.teias.grammar.predicate.*;
 import ir.teias.grammar.value.Column;
 import ir.teias.grammar.value.Value;
 import ir.teias.model.BitVector;
@@ -21,10 +20,19 @@ public class Join extends QueryWithPredicate {
     private final Query left;
     private final Query right;
 
-    public Join(Query left, Query right, Predicate predicate) {
+    private final List<String> leftProjColumns;
+    private final List<String> rightProjColumns;
+
+    public Join(Query left, Query right, Predicate predicate, List<String> leftProjColumns, List<String> rightProjColumns) {
         super(predicate);
         this.left = left;
         this.right = right;
+        this.leftProjColumns = leftProjColumns;
+        this.rightProjColumns = rightProjColumns;
+    }
+
+    public Join(Query left, Query right, Predicate predicate) {
+        this(left, right, predicate, null, null);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class Join extends QueryWithPredicate {
         if (!(right instanceof NamedTable)) {
             rightString = "( " + rightString + " )";
         }
-        return "SELECT * FROM " + leftString + " " + left.getQueryName() + " JOIN " + rightString + " " + right.getQueryName() + " ON " + predicate.toString();
+        return "SELECT " + columnsProjectionString() + " FROM " + leftString + " " + left.getQueryName() + " JOIN " + rightString + " " + right.getQueryName() + " ON " + predicate.toString();
     }
 
     @Override
@@ -49,7 +57,7 @@ public class Join extends QueryWithPredicate {
         Table rightTable = right.evaluateAbstract();
         leftTable.saveToDb();
         rightTable.saveToDb();
-        String dbQuery = "SELECT * FROM " + leftTable.getName() + " " + left.getQueryName() + " JOIN " + rightTable.getName() + " " + right.getQueryName() + " ON " + predicate.toString();
+        String dbQuery = "SELECT " + columnsProjectionString() + " FROM " + leftTable.getName() + " " + left.getQueryName() + " JOIN " + rightTable.getName() + " " + right.getQueryName() + " ON " + predicate.toString();
         return SQLManager.evaluate(dbQuery, getQueryName());
     }
 
@@ -64,17 +72,33 @@ public class Join extends QueryWithPredicate {
             rightDisplay = "(" + rightDisplay + ") " + right.getQueryName();
         }
         String tab = "\t".repeat(depth * 2);
-        StringBuilder builder = new StringBuilder("SELECT *\n");
+        StringBuilder builder = new StringBuilder("SELECT " + columnsProjectionString() + "\n");
         builder.append(tab).append("FROM   ").append(leftDisplay).append("\n");
         builder.append(tab).append("JOIN   ").append(rightDisplay).append("\n");
         builder.append(tab).append("ON     ").append(predicate);
         return builder.toString();
     }
 
+    private String columnsProjectionString() {
+        if (isFullVersion) {
+            return "*";
+        }
+        String leftColumns = leftProjColumns == null ? null : String.join(", ",
+                leftProjColumns.stream().map(c -> left.getQueryName() + "." + c).toList());
+        String rightColumns = rightProjColumns == null ? null : String.join(", ",
+                rightProjColumns.stream().map(c -> right.getQueryName() + "." + c).toList());
+
+        return leftColumns == null && rightColumns == null ? "*"
+                : leftColumns == null ? rightColumns
+                : rightColumns == null ? leftColumns
+                : leftColumns + ", " + rightColumns;
+    }
+
     @Override
     public List<BitVector> bitVectorDFS() {
         List<Predicate> predicates = enumAndGroupPredicates();
         List<BitVector> bitVectors = encodeFiltersToBitVectors(predicates);
+
         List<BitVector> bitVectorsLeft = left.bitVectorDFS();
         List<BitVector> bitVectorsRight = right.bitVectorDFS();
 
@@ -86,8 +110,8 @@ public class Join extends QueryWithPredicate {
                     Query lQuery = bvLeft.getQuery();
                     Query rQuery = bvRight.getQuery();
                     Predicate pred = updatePredicate(((QueryWithPredicate) bv.getQuery()).getPredicate(), lQuery, rQuery);
-                    Join newJoin = new Join(lQuery, rQuery, pred);
-                    res.add(new BitVector(bv.and(product), newJoin, getAbstractTable()));
+                    Join newJoin = new Join(lQuery, rQuery, pred, leftProjColumns, rightProjColumns);
+                    res.add(new BitVector(bv.and(product), newJoin, getAbstractTable(), getAbstractTableFull()));
                 }
             }
         }
@@ -96,7 +120,7 @@ public class Join extends QueryWithPredicate {
 
     @Override
     public QueryWithPredicate duplicateWithNewPredicate(Predicate predicate) {
-        return new Join(left, right, predicate);
+        return new Join(left, right, predicate, leftProjColumns, rightProjColumns);
     }
 
     @Override
@@ -141,6 +165,11 @@ public class Join extends QueryWithPredicate {
     }
 
     private Predicate updatePredicate(Predicate predicate, Query leftQuery, Query rightQuery) {
+        if (predicate instanceof ComposePredicate composePredicate) {
+            Predicate leftPredicate = updatePredicate(composePredicate.getLeft(), leftQuery, rightQuery);
+            Predicate rightPredicate = updatePredicate(composePredicate.getRight(), leftQuery, rightQuery);
+            return composePredicate.duplicateWithNewPredicates(leftPredicate, rightPredicate);
+        }
         if (!(predicate instanceof BinaryOperator binOp)) {
             return predicate;
         }

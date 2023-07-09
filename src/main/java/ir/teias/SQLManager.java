@@ -29,11 +29,14 @@ public class SQLManager {
             List<String> columns = new ArrayList<>();
             for (int i = 1; i <= preparedStatement.getMetaData().getColumnCount(); i++) {
                 String columnName = preparedStatement.getMetaData().getColumnName(i);
+                if (columns.contains(columnName)) {
+                    columnName = columnName + "2";
+                }
                 columns.add(columnName);
                 String columnTypeName = preparedStatement.getMetaData().getColumnTypeName(i);
                 switch (columnTypeName) {
-                    case "INT", "BIGINT" -> columnTypes.put(columnName, CellType.INTEGER);
-                    case "DOUBLE" -> columnTypes.put(columnName, CellType.DOUBLE);
+                    case "INT", "BIGINT", "DECIMAL" -> columnTypes.put(columnName, CellType.INTEGER);
+//                    case "DECIMAL" -> columnTypes.put(columnName, CellType.DOUBLE);
                     case "VARCHAR" -> columnTypes.put(columnName, CellType.STRING);
                     case "DATE" -> columnTypes.put(columnName, CellType.DATE);
                     case "TIME" -> columnTypes.put(columnName, CellType.TIME);
@@ -43,15 +46,19 @@ public class SQLManager {
             List<Row> rows = new ArrayList<>();
             while (resultSet.next()) {
                 HashMap<String, Cell<?>> cells = new HashMap<>();
-                for (var entry : columnTypes.entrySet()) {
-                    if (entry.getValue().equals(CellType.INTEGER)) {
-                        cells.put(entry.getKey(), new IntegerCell(resultSet.getInt(entry.getKey())));
-                    } else if (entry.getValue().equals(CellType.STRING)) {
-                        cells.put(entry.getKey(), new StringCell(resultSet.getString(entry.getKey())));
-                    } else if (entry.getValue().equals(CellType.DATE)) {
-                        cells.put(entry.getKey(), new DateCell(resultSet.getDate(entry.getKey())));
-                    } else if (entry.getValue().equals(CellType.TIME)) {
-                        cells.put(entry.getKey(), new TimeCell(resultSet.getTime(entry.getKey())));
+                for (int i = 0; i < columns.size(); i++) {
+                    String col = columns.get(i);
+                    CellType type = columnTypes.get(col);
+                    if (type.equals(CellType.INTEGER)) {
+                        cells.put(col, new IntegerCell(resultSet.getInt(i + 1)));
+                    } else if (type.equals(CellType.DOUBLE)) {
+                        cells.put(col, new DoubleCell(resultSet.getDouble(i + 1)));
+                    } else if (type.equals(CellType.STRING)) {
+                        cells.put(col, new StringCell(resultSet.getString(i + 1)));
+                    } else if (type.equals(CellType.DATE)) {
+                        cells.put(col, new DateCell(resultSet.getDate(i + 1)));
+                    } else if (type.equals(CellType.TIME)) {
+                        cells.put(col, new TimeCell(resultSet.getTime(i + 1)));
                     }
                 }
                 rows.add(new Row(cells));

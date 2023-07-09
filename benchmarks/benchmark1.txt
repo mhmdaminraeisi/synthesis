@@ -34,3 +34,4 @@ date_constants = { 2022-12-25, 2022-12-24 }
 time_constants = {}
 
 aggregation_functions = { MAX }
+use_projection = false

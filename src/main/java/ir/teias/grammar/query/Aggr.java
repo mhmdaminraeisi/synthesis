@@ -22,7 +22,7 @@ public class Aggr extends QueryWithPredicate {
     private final Query query;
 
     public Aggr(Column column, Aggregator aggregator, Query query, Predicate predicate) {
-        super(predicate);
+        super(predicate, null);
         this.column = column;
         this.aggregator = aggregator;
         this.query = query;
@@ -66,18 +66,17 @@ public class Aggr extends QueryWithPredicate {
         List<BitVector> bitVectors = encodeFiltersToBitVectors(predicates);
 
         List<BitVector> bitVectorsQuery = query.bitVectorDFS();
-
         List<BitVector> newBitVectors = new ArrayList<>();
 
         for (BitVector bvq : bitVectorsQuery) {
             Aggr aggr = new Aggr(column, aggregator, bvq.getQuery(), new True());
-            newBitVectors.add(new BitVector(aggr, getAbstractTable(), false));
+            newBitVectors.add(new BitVector(aggr, getAbstractTable(), getAbstractTableFull(), false));
         }
         List<BitVector> res = new ArrayList<>();
         for (BitVector bv : bitVectors) {
             for (BitVector nbv : newBitVectors) {
                 QueryWithPredicate newQuery = ((Aggr) nbv.getQuery()).duplicateWithNewPredicate(((QueryWithPredicate) bv.getQuery()).getPredicate());
-                res.add(new BitVector(bv.and(nbv.getVector()), newQuery, getAbstractTable()));
+                res.add(new BitVector(bv.and(nbv.getVector()), newQuery, getAbstractTable(), getAbstractTableFull()));
             }
         }
         return filterEquivalentBitVectors(res);

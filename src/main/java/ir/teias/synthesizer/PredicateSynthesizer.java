@@ -1,6 +1,7 @@
 package ir.teias.synthesizer;
 
 import ir.teias.Utils;
+import ir.teias.grammar.query.Join;
 import ir.teias.grammar.query.Query;
 import ir.teias.grammar.query.QueryWithPredicate;
 import ir.teias.model.BitVector;
@@ -18,14 +19,16 @@ public class PredicateSynthesizer {
     private final Table output;
     private final HashMap<CellType, List<Cell<?>>> constantsByType;
 
-    public void synthesisPredicates(List<Query> abstractQueries) {
+    public List<Query> synthesisPredicates(List<Query> abstractQueries) {
         for (Query query : abstractQueries) {
             if (query instanceof QueryWithPredicate) {
                 ((QueryWithPredicate) query).setConstantsByType(constantsByType);
             }
         }
-
-        List<BitVector> bitVectors = abstractQueries.get(1).bitVectorDFS()
-                .stream().filter(bitVector -> bitVector.decode().equals(output)).toList();
+        List<BitVector> bitVectors = new ArrayList<>();
+        for (Query query : abstractQueries) {
+            bitVectors.addAll(query.bitVectorDFS().stream().filter(bv -> bv.decode().equals(output)).toList());
+        }
+        return bitVectors.stream().map(BitVector::getQuery).toList();
     }
 }

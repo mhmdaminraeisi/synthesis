@@ -2,10 +2,7 @@ package ir.teias.grammar.query;
 
 import ir.teias.grammar.binop.Equal;
 import ir.teias.grammar.binop.LessThan;
-import ir.teias.grammar.predicate.BinaryOperator;
-import ir.teias.grammar.predicate.Or;
-import ir.teias.grammar.predicate.Predicate;
-import ir.teias.grammar.predicate.True;
+import ir.teias.grammar.predicate.*;
 import ir.teias.grammar.value.Column;
 import ir.teias.grammar.value.Value;
 import ir.teias.model.BitVector;
@@ -21,12 +18,20 @@ import java.util.HashMap;
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
 public abstract class QueryWithPredicate extends Query {
     protected final Predicate predicate;
 
     @Setter
     protected HashMap<CellType, List<Cell<?>>> constantsByType;
+
+    public QueryWithPredicate(Predicate predicate, List<String> projectColumns) {
+        super(projectColumns);
+        this.predicate = predicate;
+    }
+
+    public QueryWithPredicate(Predicate predicate) {
+        this(predicate, null);
+    }
 
     public abstract QueryWithPredicate duplicateWithNewPredicate(Predicate predicate);
 
@@ -91,6 +96,7 @@ public abstract class QueryWithPredicate extends Query {
         for (int i = 0; i < repPredicates.size(); i++) {
             for (int j = i + 1; j < repPredicates.size(); j++) {
                 compoundPredicates.add(new Or(repPredicates.get(i), repPredicates.get(j)));
+                compoundPredicates.add(new And(repPredicates.get(i), repPredicates.get(j)));
                 // TODO add another predicates
             }
         }
@@ -100,7 +106,7 @@ public abstract class QueryWithPredicate extends Query {
     protected List<BitVector> encodeFiltersToBitVectors(List<Predicate> predicates) {
         return predicates.stream().map(pred -> {
             QueryWithPredicate newQuery = duplicateWithNewPredicate(pred);
-            return new BitVector(newQuery, getAbstractTable(), true);
+            return new BitVector(newQuery, getAbstractTable(), getAbstractTableFull(), true);
         }).toList();
     }
 }

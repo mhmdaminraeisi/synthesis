@@ -1,0 +1,29 @@
+t1:
+________________________
+|  ErrorName | Value   |
+|  STRING    | INTEGER |
+________________________
+|  Error1    | 3       |
+|  Error2    | 2       |
+|  Error3    | 2       |
+|  Error1    | 1       |
+|  Error2    | 1       |
+________________________
+tout:
+_____________________
+| c1      | c2      |
+| STRING  | INTEGER |
+_____________________
+| Error1  | 4       |
+| Error2  | 3       |
+| Error3  | 2       |
+_____________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { SUM }
+use_projection = false

@@ -3,6 +3,7 @@ package ir.teias;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,5 +29,19 @@ public class Utils {
             query = query.replace(match.substring(2), tableName);
         }
         return query;
+    }
+    public static <T> List<List<T>> getListOfSubsets(List<T> objects) {
+        List<List<T>> listOfSubsets = new ArrayList<>(List.of(new ArrayList<>()));
+        for (T obj : objects) {
+            List<List<T>> newSubsets = new ArrayList<>();
+            for (List<T> subset : listOfSubsets) {
+                List<T> newSubset = new ArrayList<>(subset);
+                newSubset.add(obj);
+                newSubsets.add(newSubset);
+            }
+            listOfSubsets.addAll(newSubsets);
+        }
+        listOfSubsets.remove(0);
+        return listOfSubsets;
     }
 }

@@ -8,9 +8,13 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
 public class NamedTable extends Query {
     private final Table table;
+
+    public NamedTable(Table table) {
+        super(null);
+        this.table = table;
+    }
 
     @Override
     public String toString() {
@@ -39,7 +43,6 @@ public class NamedTable extends Query {
 
     @Override
     public List<BitVector> bitVectorDFS() {
-        return List.of(new BitVector(this, getAbstractTable(), true));
+        return List.of(new BitVector(this, getAbstractTable(), getAbstractTableFull(), true));
     }
-
 }

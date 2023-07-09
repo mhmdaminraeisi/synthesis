@@ -18,9 +18,13 @@ import java.util.stream.Collectors;
 public class Select extends QueryWithPredicate {
     private final Query query;
 
-    public Select(Query query, Predicate predicate) {
-        super(predicate);
+    public Select(Query query, Predicate predicate, List<String> projectColumns) {
+        super(predicate, projectColumns);
         this.query = query;
+    }
+
+    public Select(Query query, Predicate predicate) {
+        this(query, predicate, null);
     }
 
     @Override
@@ -29,7 +33,7 @@ public class Select extends QueryWithPredicate {
         if (!(query instanceof NamedTable)) {
             queryString = "(" + queryString + ") AS " + query.getQueryName();
         }
-        return "SELECT * FROM " + queryString + " WHERE " + predicate;
+        return "SELECT " + columnsProjectionString() + " FROM " + queryString + " WHERE " + predicate;
     }
 
     @Override
@@ -40,7 +44,7 @@ public class Select extends QueryWithPredicate {
         Table queryTable = query.evaluateAbstract();
         queryTable.saveToDb();
 
-        String dbQuery = "SELECT * FROM " + queryTable.getName() + " WHERE " + predicate.toString();
+        String dbQuery = "SELECT " + columnsProjectionString() + " FROM " + queryTable.getName() + " WHERE " + predicate.toString();
         return SQLManager.evaluate(dbQuery, getQueryName());
     }
 
@@ -51,10 +55,17 @@ public class Select extends QueryWithPredicate {
             queryDisplay = "(" + queryDisplay + ") AS " + query.getQueryName();
         }
         String tab = "\t".repeat(depth * 2);
-        StringBuilder builder = new StringBuilder("SELECT *\n");
+        StringBuilder builder = new StringBuilder("SELECT " + columnsProjectionString() + "\n");
         builder.append(tab).append("FROM   ").append(queryDisplay).append("\n");
         builder.append(tab).append("WHERE  ").append(predicate);
         return builder.toString();
+    }
+
+    private String columnsProjectionString() {
+        if (isFullVersion) {
+            return "*";
+        }
+        return projectColumns == null ? "*" : String.join(", ", projectColumns);
     }
 
     @Override
@@ -67,7 +78,7 @@ public class Select extends QueryWithPredicate {
         for (BitVector bv : bitVectors) {
             for (BitVector bvq : bitVectorsQuery) {
                 Select newSelect = new Select(bvq.getQuery(), ((QueryWithPredicate) bv.getQuery()).getPredicate());
-                res.add(new BitVector(bv.and(bvq.getVector()), newSelect, getAbstractTable()));
+                res.add(new BitVector(bv.and(bvq.getVector()), newSelect, getAbstractTable(), getAbstractTableFull()));
             }
         }
         return filterEquivalentBitVectors(res);
@@ -75,7 +86,7 @@ public class Select extends QueryWithPredicate {
 
     @Override
     public QueryWithPredicate duplicateWithNewPredicate(Predicate predicate) {
-        return new Select(query, predicate);
+        return new Select(query, predicate, projectColumns);
     }
 
     @Override
@@ -88,11 +99,13 @@ public class Select extends QueryWithPredicate {
         for (var entry : columnsByType.entrySet()) {
             List<String> columns = entry.getValue();
             List<Value> columnValues = columns.stream().map(col -> new Column(col, query.getQueryName())).collect(Collectors.toList());
+            primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, columnValues, true, false));
 
             List<Cell<?>> constantsWithSameType = constantsByType.get(entry.getKey());
+            if (constantsWithSameType == null) {
+                continue;
+            }
             List<Value> constantValues = constantsWithSameType.stream().map(Const::new).collect(Collectors.toList());
-
-            primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, columnValues, true, false));
             primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, constantValues, false, false));
         }
         return primitivesPredicates;
