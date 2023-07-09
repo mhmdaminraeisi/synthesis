@@ -3,6 +3,7 @@ package ir.teias.synthesizer;
 
 import ir.teias.Utils;
 import ir.teias.grammar.aggregator.Aggregator;
+import ir.teias.grammar.aggregator.Count;
 import ir.teias.grammar.aggregator.Max;
 import ir.teias.grammar.aggregator.Sum;
 import ir.teias.grammar.predicate.Hole;
@@ -63,7 +64,6 @@ public class AbstractQuerySynthesizer {
         generatedAbstractQueries.addAll(generateSelectAbstractQueries(newQueries, useProj));
         generatedAbstractQueries.addAll(generateJoinAbstractQueries(newQueries, preQueries, useProj));
         generatedAbstractQueries.addAll(generateAggrAbstractQueries(newQueries));
-
         return generatedAbstractQueries;
     }
 
@@ -157,6 +157,7 @@ public class AbstractQuerySynthesizer {
             Table table = query.evaluate();
             List<Aggr> queries = new ArrayList<>();
             for (int i = 0; i < table.getColumns().size(); i++) {
+                boolean countAdded = false;
                 for (int j = 0; j < table.getColumns().size(); j++) {
                     if (i == j) {
                         continue;
@@ -177,6 +178,13 @@ public class AbstractQuerySynthesizer {
                                     continue;
                                 }
                                 aggregator = new Sum(argColumn);
+                            }
+                            case "COUNT" -> {
+                                if (countAdded) {
+                                    continue;
+                                }
+                                aggregator = new Count();
+                                countAdded = true;
                             }
                         }
                         queries.add(new Aggr(new Column(columnName, table.getName()), aggregator, query, new Hole()));

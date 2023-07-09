@@ -25,7 +25,7 @@ public class Main {
 
         FileScanner fileScanner = new FileScanner();
         try {
-            InputAPI api = fileScanner.read("benchmarks/benchmark3.txt");
+            InputAPI api = fileScanner.read("benchmarks/benchmark4.txt");
             for (var table : api.getInputs()) {
                 table.saveToDb();
             }
