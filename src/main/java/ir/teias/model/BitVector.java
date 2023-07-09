@@ -20,7 +20,7 @@ public class BitVector {
         this.query = query;
         this.initAbstractTable = initAbstractTable;
         this.initAbstractTableFull = initAbstractTableFull;
-        this.encode(encodeAbstract ? query.evaluateAbstractFull() : query.evaluateFull());
+        this.encode(encodeAbstract ? query.getAbstractTableFull() : query.evaluateFull());
     }
 
     public BitVector(ArrayList<Boolean> vc, Query query, Table initAbstractTable, Table initAbstractTableFull) {

@@ -25,14 +25,14 @@ public class Main {
 
         FileScanner fileScanner = new FileScanner();
         try {
-            InputAPI api = fileScanner.read("benchmarks/benchmark3_3.txt");
+            InputAPI api = fileScanner.read("benchmarks/benchmark202.txt");
             for (var table : api.getInputs()) {
                 table.saveToDb();
             }
             api.getOutput().saveToDb();
-            Synthesizer synthesizer = new Synthesizer(api.getInputs(), api.getOutput(),
-                    api.getConstantsByType(), api.getAggregators(), api.isUseProjection());
-            synthesizer.synthesis();
+//            Synthesizer synthesizer = new Synthesizer(api.getInputs(), api.getOutput(),
+//                    api.getConstantsByType(), api.getAggregators(), api.isUseProjection(), api.isMultipleGroupBy());
+//            synthesizer.synthesis();
             SQLManager.deleteCreatedTables();
         } catch (IOException e) {
             throw new RuntimeException(e);

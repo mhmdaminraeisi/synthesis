@@ -95,18 +95,19 @@ public class Select extends QueryWithPredicate {
         List<String> idColumns = getIdColumns();
 
         List<Predicate> primitivesPredicates = new ArrayList<>();
-
         for (var entry : columnsByType.entrySet()) {
             List<String> columns = entry.getValue();
             List<Value> columnValues = columns.stream().map(col -> new Column(col, query.getQueryName())).collect(Collectors.toList());
-            primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, columnValues, true, false));
+
+            boolean isString = entry.getKey().equals(CellType.STRING);
+            primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, columnValues, true, false, isString));
 
             List<Cell<?>> constantsWithSameType = constantsByType.get(entry.getKey());
             if (constantsWithSameType == null) {
                 continue;
             }
             List<Value> constantValues = constantsWithSameType.stream().map(Const::new).collect(Collectors.toList());
-            primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, constantValues, false, false));
+            primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, constantValues, false, false, isString));
         }
         return primitivesPredicates;
     }

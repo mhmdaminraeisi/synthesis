@@ -1,5 +1,6 @@
 package ir.teias.synthesizer;
 
+import ir.teias.SQLManager;
 import ir.teias.Utils;
 import ir.teias.grammar.query.Query;
 import ir.teias.model.Table;
@@ -15,8 +16,8 @@ public class Synthesizer {
 
     private final PredicateSynthesizer predicateSynthesizer;
 
-    public Synthesizer(List<Table> inputs, Table output, HashMap<CellType, List<Cell<?>>> constantsByType, List<String> aggregators, boolean useProjection) {
-        this.abstractQuerySynthesizer = new AbstractQuerySynthesizer(inputs, output, aggregators, useProjection);
+    public Synthesizer(List<Table> inputs, Table output, HashMap<CellType, List<Cell<?>>> constantsByType, List<String> aggregators, boolean useProjection, boolean multipleGroupBy) {
+        this.abstractQuerySynthesizer = new AbstractQuerySynthesizer(inputs, output, aggregators, useProjection, multipleGroupBy);
         this.predicateSynthesizer = new PredicateSynthesizer(output, constantsByType);
     }
 
@@ -25,9 +26,13 @@ public class Synthesizer {
         long end = System.currentTimeMillis() + 15000;
         int depth = 1;
         List<Query> solutions = new ArrayList<>();
-        while (solutions.size() == 0) {
+        while (solutions.size() == 0 && depth < 4) {
             System.out.println("Search for depth = " + depth);
             List<Query> candidateAbstractQueries = abstractQuerySynthesizer.synthesisAbstractQueries(depth);
+            for (var khar : candidateAbstractQueries) {
+                System.out.println(khar);
+            }
+            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             solutions.addAll(predicateSynthesizer.synthesisPredicates(candidateAbstractQueries));
             depth += 1;
         }

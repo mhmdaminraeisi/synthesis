@@ -56,7 +56,7 @@ public abstract class Query {
     public abstract String display(int depth);
 
     public HashMap<CellType, List<String>> getColumnsByType() {
-        Table absTable = getAbstractTable();
+        Table absTable = getAbstractTableFull();
         HashMap<CellType, List<String>> columnsByType = new HashMap<>();
         for (String column : absTable.getColumns()) {
             if (column.contains("id") || column.contains("Id")) {

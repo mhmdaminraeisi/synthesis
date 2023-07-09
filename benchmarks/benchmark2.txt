@@ -27,3 +27,4 @@ time_constants = {}
 
 aggregation_functions = { SUM }
 use_projection = false
+multiple_group_by = false

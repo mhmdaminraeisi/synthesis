@@ -2,6 +2,7 @@ package ir.teias.grammar.aggregator;
 
 import ir.teias.SQLManager;
 import ir.teias.grammar.query.Aggr;
+import ir.teias.grammar.value.Column;
 import ir.teias.model.Row;
 import ir.teias.model.Table;
 import ir.teias.model.cell.Cell;
@@ -32,19 +33,24 @@ public class Min extends OneArgAggregator {
         return "min";
     }
 
+
     @Override
     public Table evaluateAbstract(Aggr aggr) {
         Table deDuplicatedTable = SQLManager.deDuplicate(aggr.getQuery().evaluateAbstract(), aggr.getQueryName());
-        List<String> newColumns = Arrays.asList(aggr.getColumn().getColumnName(), newColumnName());
+        List<String> newColumns = new ArrayList<>(aggr.getColumns().stream().map(Column::getColumnName).toList());
+        newColumns.add(newColumnName());
         HashMap<String, CellType> newColumnsByType = new HashMap<>();
-        String col = aggr.getColumn().getColumnName();
-        newColumnsByType.put(col, deDuplicatedTable.getColumnTypes().get(col));
+        for (Column col : aggr.getColumns()) {
+            newColumnsByType.put(col.getColumnName(), deDuplicatedTable.getColumnTypes().get(col.getColumnName()));
+        }
         newColumnsByType.put(newColumnName(), deDuplicatedTable.getColumnTypes().get(argColumn));
         List<Row> newRows = new ArrayList<>();
         for (Row row : deDuplicatedTable.getRows()) {
             HashMap<String, Cell<?>> cells = new HashMap<>();
             cells.put(newColumnName(), row.cells().get(argColumn));
-            cells.put(col, row.cells().get(col));
+            for (Column col : aggr.getColumns()) {
+                cells.put(col.getColumnName(), row.cells().get(col.getColumnName()));
+            }
             newRows.add(new Row(cells));
         }
         return new Table(deDuplicatedTable.getName(), newColumns, newColumnsByType, newRows);

@@ -26,3 +26,4 @@ time_constants = {}
 
 aggregation_functions = { MIN }
 use_projection = true
+multiple_group_by = false

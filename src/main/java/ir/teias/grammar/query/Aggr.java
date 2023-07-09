@@ -17,13 +17,13 @@ import java.util.List;
 
 @Getter
 public class Aggr extends QueryWithPredicate {
-    private final Column column;
+    private final List<Column> columns;
     private final Aggregator aggregator;
     private final Query query;
 
-    public Aggr(Column column, Aggregator aggregator, Query query, Predicate predicate) {
+    public Aggr(List<Column> columns, Aggregator aggregator, Query query, Predicate predicate) {
         super(predicate, null);
-        this.column = column;
+        this.columns = columns;
         this.aggregator = aggregator;
         this.query = query;
     }
@@ -34,14 +34,18 @@ public class Aggr extends QueryWithPredicate {
         if (!(query instanceof NamedTable)) {
             queryString = "( " + queryString + " )";
         }
-        return "SELECT " + column.getColumnName() + ", " + aggregator.toString() + " FROM "
-                + queryString + " " + query.getQueryName() + " GROUP BY " + column.getColumnName() + " HAVING " + predicate.toString();
+        return "SELECT " + columnNames() + ", " + aggregator.toString() + " FROM "
+                + queryString + " " + query.getQueryName() + " GROUP BY " + columnNames() + " HAVING " + predicate.toString();
+    }
+
+    private String columnNames() {
+        return String.join(", ", columns.stream().map(Column::getColumnName).toList());
     }
 
     @Override
     public Table evaluateAbstract() {
         if (SQLManager.isTableExists(getQueryName())) {
-            return SQLManager.evaluate("SELECT * FROM " + getQueryName(), getQueryName());
+            return SQLManager.deDuplicate(SQLManager.evaluate("SELECT * FROM " + getQueryName(), getQueryName()), getQueryName());
         }
         return aggregator.evaluateAbstract(this);
     }
@@ -53,9 +57,9 @@ public class Aggr extends QueryWithPredicate {
             queryDisplay = "(" + queryDisplay + ") " + query.getQueryName();
         }
         String tab = "\t".repeat(depth * 2);
-        StringBuilder builder = new StringBuilder("SELECT " + column.getColumnName() + ", " + aggregator.toString() + "\n");
+        StringBuilder builder = new StringBuilder("SELECT " + columnNames() + ", " + aggregator.toString() + "\n");
         builder.append(tab).append("FROM   ").append(queryDisplay).append("\n");
-        builder.append(tab).append("GROUP BY ").append(column.getColumnName()).append("\n");
+        builder.append(tab).append("GROUP BY ").append(columnNames()).append("\n");
         builder.append(tab).append("HAVING ").append(predicate);
         return builder.toString();
     }
@@ -69,7 +73,7 @@ public class Aggr extends QueryWithPredicate {
         List<BitVector> newBitVectors = new ArrayList<>();
 
         for (BitVector bvq : bitVectorsQuery) {
-            Aggr aggr = new Aggr(column, aggregator, bvq.getQuery(), new True());
+            Aggr aggr = new Aggr(columns, aggregator, bvq.getQuery(), new True());
             newBitVectors.add(new BitVector(aggr, getAbstractTable(), getAbstractTableFull(), false));
         }
         List<BitVector> res = new ArrayList<>();
@@ -84,7 +88,7 @@ public class Aggr extends QueryWithPredicate {
 
     @Override
     public QueryWithPredicate duplicateWithNewPredicate(Predicate predicate) {
-        return new Aggr(column, aggregator, query, predicate);
+        return new Aggr(columns, aggregator, query, predicate);
     }
 
     @Override

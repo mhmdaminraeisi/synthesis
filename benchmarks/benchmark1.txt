@@ -35,3 +35,4 @@ time_constants = {}
 
 aggregation_functions = { MAX }
 use_projection = false
+multiple_group_by = false

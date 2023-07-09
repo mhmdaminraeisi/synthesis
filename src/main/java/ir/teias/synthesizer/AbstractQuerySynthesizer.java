@@ -21,6 +21,7 @@ public class AbstractQuerySynthesizer {
     private final Table output;
     private final List<String> aggregators;
     private final boolean useProjection;
+    private final boolean multipleColumn;
 
     public List<Query> filterCandidates(List<Query> queries) {
         return queries.stream().filter(
@@ -39,7 +40,7 @@ public class AbstractQuerySynthesizer {
         List<Query> preQueries = new ArrayList<>();
         int d = 1;
         while (d++ < depth) {
-            newQueries = enumOneStepAbstractQuery(newQueries, preQueries, useProjection && d == depth).stream().filter(
+            newQueries = enumOneStepAbstractQuery(newQueries, preQueries, useProjection && d == depth, d == depth).stream().filter(
                     newQuery -> {
                         for (Query query : abstractQueries) {
                             if (query.evaluateAbstract().equals(newQuery.evaluateAbstract())) {
@@ -55,12 +56,12 @@ public class AbstractQuerySynthesizer {
         return filterCandidates(abstractQueries);
     }
 
-    private List<Query> enumOneStepAbstractQuery(List<Query> newQueries, List<Query> preQueries, boolean useProj) {
+    private List<Query> enumOneStepAbstractQuery(List<Query> newQueries, List<Query> preQueries, boolean useProj, boolean lastDepth) {
         List<Query> generatedAbstractQueries = new ArrayList<>();
 
         generatedAbstractQueries.addAll(generateSelectAbstractQueries(newQueries, useProj));
         generatedAbstractQueries.addAll(generateJoinAbstractQueries(newQueries, preQueries, useProj));
-        generatedAbstractQueries.addAll(generateAggrAbstractQueries(newQueries));
+        generatedAbstractQueries.addAll(generateAggrAbstractQueries(newQueries, multipleColumn, lastDepth));
         return generatedAbstractQueries;
     }
 
@@ -144,7 +145,7 @@ public class AbstractQuerySynthesizer {
         return queries;
     }
 
-    private List<Aggr> generateAggrAbstractQueries(List<Query> newQueries) {
+    private List<Aggr> generateAggrAbstractQueries(List<Query> newQueries, boolean multipleGroupBy, boolean lastDepth) {
         List<Aggr> generatedAbstractQueries = new ArrayList<>();
         for (Query query : newQueries) {
             if (query instanceof Aggr || query instanceof Join) {
@@ -153,14 +154,21 @@ public class AbstractQuerySynthesizer {
             // just need table column names;
             Table table = query.evaluate();
             List<Aggr> queries = new ArrayList<>();
-            for (int i = 0; i < table.getColumns().size(); i++) {
+            List<List<String>> columnSubsets = Utils.getListOfSubsets(table.getColumns());
+            for (List<String> subset : columnSubsets) {
+                if (!multipleGroupBy && subset.size() != 1) {
+                    continue;
+                }
+                if (lastDepth && subset.size() != output.getColumns().size() - 1) {
+                    continue;
+                }
+//            for (int i = 0; i < table.getColumns().size(); i++) {
                 boolean countAdded = false;
                 for (int j = 0; j < table.getColumns().size(); j++) {
-                    if (i == j) {
+                    String argColumn = table.getColumns().get(j);
+                    if (subset.contains(argColumn)) {
                         continue;
                     }
-                    String columnName = table.getColumns().get(i);
-                    String argColumn = table.getColumns().get(j);
                     for (String aggr : aggregators) {
                         Aggregator aggregator = null;
                         switch (aggr) {
@@ -190,7 +198,8 @@ public class AbstractQuerySynthesizer {
                                 countAdded = true;
                             }
                         }
-                        queries.add(new Aggr(new Column(columnName, table.getName()), aggregator, query, new Hole()));
+                        List<Column> columns = subset.stream().map(c -> new Column(c, table.getName())).toList();
+                        queries.add(new Aggr(columns, aggregator, query, new Hole()));
                     }
                 }
             }

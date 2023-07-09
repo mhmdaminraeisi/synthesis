@@ -1,0 +1,31 @@
+t1:
+_______________________________
+| Id      |  Name  |  other   |
+| INTEGER | STRING | STRING   |
+_______________________________
+| 1       |  A     | A_data_1 |
+| 2       |  A     | A_data_2 |
+| 3       |  A     | A_data_3 |
+| 4       |  B     | B_data_1 |
+| 5       |  B     | B_data_2 |
+| 6       |  C     | C_data_1 |
+_______________________________
+tout:
+_______________________________
+| col1    | col2   | col3     |
+| INTEGER | STRING | STRING   |
+_______________________________
+| 3       | A      | A_data_3 |
+| 5       | B      | B_data_2 |
+| 6       | C      | C_data_1 |
+_______________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { MAX }
+use_projection = true
+multiple_group_by = false

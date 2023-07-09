@@ -1,0 +1,30 @@
+t1:
+________________________________
+|   id    | customer | total   |
+| INTEGER | STRING   | INTEGER |
+________________________________
+| 1       | Joe      | 5       |
+| 2       | Joe      | 6       |
+| 3       | Joe      | 6       |
+| 4       | Joe      | 6       |
+| 5       | Sally    | 3       |
+| 6       | Joe      | 2       |
+| 7       | Sally    | 1       |
+________________________________
+tout:
+_______________________________
+| c1      | c2      |   c3    |
+| INTEGER | STRING  | INTEGER |
+_______________________________
+|       2 | Joe     | 6       |
+|       5 | Sally   | 3       |
+_______________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { MIN, MAX }
+use_projection = true

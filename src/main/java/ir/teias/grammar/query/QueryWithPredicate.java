@@ -1,7 +1,9 @@
 package ir.teias.grammar.query;
 
 import ir.teias.grammar.binop.Equal;
+import ir.teias.grammar.binop.GreaterThan;
 import ir.teias.grammar.binop.LessThan;
+import ir.teias.grammar.binop.NotEqual;
 import ir.teias.grammar.predicate.*;
 import ir.teias.grammar.value.Column;
 import ir.teias.grammar.value.Value;
@@ -37,15 +39,17 @@ public abstract class QueryWithPredicate extends Query {
 
     public abstract List<Predicate> enumeratePrimitivePredicates();
 
-    public List<Predicate> enumerateBinOpPredicates(List<Value> lefts, List<Value> rights, boolean isSame, boolean isId) {
+    public List<Predicate> enumerateBinOpPredicates(List<Value> lefts, List<Value> rights, boolean isSame, boolean isId, boolean isString) {
         List<Predicate> binOpPredicates = new ArrayList<>();
         for (int i = 0; i < lefts.size(); i++) {
             for (int j = isSame ? i + 1 : 0; j < rights.size(); j++) {
                 binOpPredicates.add(new BinaryOperator(lefts.get(i), rights.get(j), new Equal()));
-                if (isId) {
+                binOpPredicates.add(new BinaryOperator(lefts.get(i), rights.get(j), new NotEqual()));
+                if (isId || isString) {
                     continue;
                 }
                 binOpPredicates.add(new BinaryOperator(lefts.get(i), rights.get(j), new LessThan()));
+                binOpPredicates.add(new BinaryOperator(lefts.get(i), rights.get(j), new GreaterThan()));
                 // TODO uncomment below lines
 //                    primitivesPredicates.add(new BinaryOperator(leftValue, rightValue, new GreaterThanEqual()));
 //                    primitivesPredicates.add(new BinaryOperator(leftValue, rightValue, new LessThan()));
@@ -59,9 +63,9 @@ public abstract class QueryWithPredicate extends Query {
         List<Predicate> representativePredicates = new ArrayList<>();
         List<Table> repTables = new ArrayList<>();
         List<Predicate> primitivesPredicates = enumeratePrimitivePredicates();
-        addNonEquivalentPredicates(primitivesPredicates, representativePredicates, repTables);
 
         addNonEquivalentPredicates(List.of(new True()), representativePredicates, repTables);
+        addNonEquivalentPredicates(primitivesPredicates, representativePredicates, repTables);
 
         List<Predicate> compoundPredicates = getCompoundPredicates(representativePredicates);
         addNonEquivalentPredicates(compoundPredicates, representativePredicates, repTables);

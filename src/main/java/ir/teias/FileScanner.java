@@ -81,7 +81,10 @@ public class FileScanner {
 
             line = br.readLine();
             boolean useProjection = line.split("=")[1].replaceAll("[{}\s]", "").equals("true");
-            return new InputAPI(inputTables, output, constantsByType, aggrFunctions, useProjection);
+            line = br.readLine();
+            boolean multipleGroupBy = line.split("=")[1].replaceAll("[{}\s]", "").equals("true");
+
+            return new InputAPI(inputTables, output, constantsByType, aggrFunctions, useProjection, multipleGroupBy);
         }
     }
 

@@ -17,5 +17,6 @@ public class InputAPI {
     private final HashMap<CellType, List<Cell<?>>> constantsByType;
     private final List<String> aggregators;
     private final boolean useProjection;
+    private final boolean multipleGroupBy;
 
 }

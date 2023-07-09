@@ -142,13 +142,14 @@ public class Join extends QueryWithPredicate {
             List<Value> leftColumnValues = leftColumns.stream().map(col -> new Column(col, left.getQueryName())).collect(Collectors.toList());
             List<Value> rightColumnValues = rightColumns.stream().map(col -> new Column(col, right.getQueryName())).collect(Collectors.toList());
 
-            primitivesPredicates.addAll(enumerateBinOpPredicates(leftColumnValues, rightColumnValues, false, false));
+            boolean isString = entry.getKey().equals(CellType.STRING);
+            primitivesPredicates.addAll(enumerateBinOpPredicates(leftColumnValues, rightColumnValues, false, false, isString));
         }
 
         List<Value> leftIdColumnValues = leftIdColumns.stream().map(idCol -> new Column(idCol, left.getQueryName())).collect(Collectors.toList());
         List<Value> rightIdColumnValues = rightIdColumns.stream().map(idCol -> new Column(idCol, right.getQueryName())).collect(Collectors.toList());
 
-        primitivesPredicates.addAll(enumerateBinOpPredicates(leftIdColumnValues, rightIdColumnValues, false, true));
+        primitivesPredicates.addAll(enumerateBinOpPredicates(leftIdColumnValues, rightIdColumnValues, false, true, false));
 
         return primitivesPredicates;
     }
