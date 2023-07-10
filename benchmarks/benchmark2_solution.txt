@@ -1,0 +1,23 @@
+candidate abstract queries:
+
+SELECT ErrorName, SUM(Value) AS sum_Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+GROUP BY ErrorName
+HAVING <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT ErrorName, SUM(Value) AS sum_Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+GROUP BY ErrorName
+HAVING TRUE
+
+
+_________________________________________________________
+time: 5.067 seconds

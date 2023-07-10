@@ -1,0 +1,43 @@
+candidate abstract queries:
+
+SELECT *
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t3
+JOIN   (SELECT *
+		FROM   t2
+		WHERE  <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT *
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t3
+JOIN   (SELECT oid, MAX(val) AS max_val
+		FROM   (SELECT *
+				FROM   t2
+				WHERE  <HOLE>) t4
+		GROUP BY oid
+		HAVING <HOLE>) t5
+ON     <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT *
+FROM   (SELECT *
+		FROM   t1
+		WHERE  (t1.date = '2022-12-25' OR t1.date = '2022-12-24')) t3
+JOIN   (SELECT oid, MAX(val) AS max_val
+		FROM   (SELECT *
+				FROM   t2
+				WHERE  t2.val <> 50) t4
+		GROUP BY oid
+		HAVING TRUE) t5
+ON     t3.uid = t5.oid
+
+
+_________________________________________________________
+time: 10.674 seconds

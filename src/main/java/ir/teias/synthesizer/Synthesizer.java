@@ -8,6 +8,7 @@ import ir.teias.model.cell.Cell;
 import ir.teias.model.cell.CellType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,41 +23,31 @@ public class Synthesizer {
     }
 
 
-    public void synthesis() {
-        long end = System.currentTimeMillis() + 15000;
+    public String synthesis() {
+        long startTime = System.currentTimeMillis();
+        StringBuilder res = new StringBuilder();
         int depth = 1;
         List<Query> solutions = new ArrayList<>();
-        while (solutions.size() == 0 && depth < 4) {
-            System.out.println("Search for depth = " + depth);
+        while (solutions.size() == 0) {
             List<Query> candidateAbstractQueries = abstractQuerySynthesizer.synthesisAbstractQueries(depth);
-            for (var khar : candidateAbstractQueries) {
-                System.out.println(khar);
-            }
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             solutions.addAll(predicateSynthesizer.synthesisPredicates(candidateAbstractQueries));
             depth += 1;
+            if (solutions.size() != 0) {
+                long elapsedTime = (new Date()).getTime() - startTime;
+
+                res.append("candidate abstract queries:\n\n");
+                for (var abstractQuery : candidateAbstractQueries) {
+                    res.append(Utils.replaceQueryNames(abstractQuery.display(0))).append("\n\n\n");
+                }
+                res.append("_________________________________________________________\n");
+                res.append("solutions: \n\n");
+                for (var solution : solutions) {
+                    res.append(Utils.replaceQueryNames(solution.display(0))).append("\n\n\n");
+                }
+                res.append("_________________________________________________________\n");
+                res.append("time: " + (double) elapsedTime / 1000.0+ " seconds");
+            }
         }
-
-//        List<Query> candidates = abstractQuerySynthesizer.synthesisAbstractQueries(3);
-//        solutions.addAll(predicateSynthesizer.synthesisPredicates(candidates));
-
-        for (Query query : solutions) {
-            System.out.println(Utils.replaceQueryNames(query.display(0)));
-            System.out.println("_______________________________");
-        }
-
-//        while (System.currentTimeMillis() < end) {
-//            List<Query> queries = new ArrayList<>();
-//            for (Query abstractQuery : abstractQueries) {
-//
-//            }
-//        }
-//        for (Query abstractQuery : abstractQueries) {
-//            System.out.println(abstractQuery.getQueryName() + "    " + abstractQuery.toString());
-//            System.out.println(abstractQuery.evaluateAbstract().toString());
-//            System.out.println(output);
-//        }
-//        System.out.println(abstractQueries.size());
+        return res.toString();
     }
-
 }

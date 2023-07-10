@@ -71,11 +71,12 @@ public class Join extends QueryWithPredicate {
         if (!(right instanceof NamedTable)) {
             rightDisplay = "(" + rightDisplay + ") " + right.getQueryName();
         }
+        String pred = predicate instanceof Hole ? "<HOLE>" : predicate.toString();
         String tab = "\t".repeat(depth * 2);
         StringBuilder builder = new StringBuilder("SELECT " + columnsProjectionString() + "\n");
         builder.append(tab).append("FROM   ").append(leftDisplay).append("\n");
         builder.append(tab).append("JOIN   ").append(rightDisplay).append("\n");
-        builder.append(tab).append("ON     ").append(predicate);
+        builder.append(tab).append("ON     ").append(pred);
         return builder.toString();
     }
 

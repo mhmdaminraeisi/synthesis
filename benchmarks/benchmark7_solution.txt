@@ -1,0 +1,17 @@
+candidate abstract queries:
+
+SELECT yrq
+FROM   t1
+WHERE  <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT *
+FROM   t1
+WHERE  (t1.start_date < '2013-02-01' AND t1.end_date > '2013-02-15')
+
+
+_________________________________________________________
+time: 0.237 seconds

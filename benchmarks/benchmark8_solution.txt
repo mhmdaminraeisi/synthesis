@@ -1,0 +1,17 @@
+candidate abstract queries:
+
+SELECT *
+FROM   t1
+WHERE  <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT *
+FROM   t1
+WHERE  t1.from_user <> 'me'
+
+
+_________________________________________________________
+time: 0.054 seconds

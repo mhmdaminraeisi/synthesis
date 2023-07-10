@@ -1,0 +1,161 @@
+candidate abstract queries:
+
+SELECT *
+FROM   t1
+WHERE  <HOLE>
+
+
+SELECT t3.id, t3.max_rev, t4.content
+FROM   (SELECT id, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY id
+		HAVING <HOLE>) t3
+JOIN   (SELECT content, MAX(id) AS max_id
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY content
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.id, t3.max_rev, t4.content
+FROM   (SELECT id, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY id
+		HAVING <HOLE>) t3
+JOIN   (SELECT content, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY content
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT id, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY id
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT rev, MAX(id) AS max_id
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY rev
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT content, MAX(id) AS max_id
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY content
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.id, t2.rev, t3.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT content, MAX(id) AS max_id
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY content
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT content, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY content
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.id, t2.rev, t3.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT content, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY content
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+JOIN   (SELECT id, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t3
+		GROUP BY id
+		HAVING TRUE) t4
+ON     (t2.rev = t4.max_rev AND t2.id = t4.id)
+
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+JOIN   (SELECT id, MAX(rev) AS max_rev
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t3
+		GROUP BY id
+		HAVING TRUE) t4
+ON     (t2.rev = t4.max_rev AND t2.id <> t4.id)
+
+
+SELECT t2.id, t2.rev, t2.content
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+JOIN   (SELECT rev, MAX(id) AS max_id
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t3
+		GROUP BY rev
+		HAVING TRUE) t4
+ON     (t2.rev > t4.rev AND t2.id = t4.max_id)
+
+
+_________________________________________________________
+time: 19.292 seconds

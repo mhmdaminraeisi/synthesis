@@ -16,24 +16,39 @@ import ir.teias.model.cell.DateCell;
 import ir.teias.model.cell.IntegerCell;
 import ir.teias.synthesizer.Synthesizer;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-
+        SQLManager.deleteCreatedTables();
         FileScanner fileScanner = new FileScanner();
         try {
-            InputAPI api = fileScanner.read("benchmarks/benchmark202.txt");
-            for (var table : api.getInputs()) {
-                table.saveToDb();
+            int counter = 1;
+            while (true) {
+                System.out.println("synthesis benchmark " + counter);
+                String path = "benchmarks/benchmark" + counter + ".txt";
+                File file = new File(path);
+                if (!file.exists()) {
+                    break;
+                }
+                String solPath = "benchmarks/benchmark" + counter + "_solution.txt";
+                InputAPI api = fileScanner.read(path);
+                PrintWriter writer = new PrintWriter(solPath, "UTF-8");
+                for (var table : api.getInputs()) {
+                    table.saveToDb();
+                }
+                Synthesizer synthesizer = new Synthesizer(api.getInputs(), api.getOutput(),
+                        api.getConstantsByType(), api.getAggregators(), api.isUseProjection(), api.isMultipleGroupBy());
+                String result = synthesizer.synthesis();
+                writer.println(result);
+                writer.close();
+                SQLManager.deleteCreatedTables();
+                counter += 1;
             }
-            api.getOutput().saveToDb();
-//            Synthesizer synthesizer = new Synthesizer(api.getInputs(), api.getOutput(),
-//                    api.getConstantsByType(), api.getAggregators(), api.isUseProjection(), api.isMultipleGroupBy());
-//            synthesizer.synthesis();
-            SQLManager.deleteCreatedTables();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

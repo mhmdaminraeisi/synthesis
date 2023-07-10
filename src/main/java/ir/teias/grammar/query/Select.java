@@ -1,6 +1,7 @@
 package ir.teias.grammar.query;
 
 import ir.teias.SQLManager;
+import ir.teias.grammar.predicate.Hole;
 import ir.teias.grammar.predicate.Predicate;
 import ir.teias.grammar.value.Column;
 import ir.teias.grammar.value.Const;
@@ -54,10 +55,11 @@ public class Select extends QueryWithPredicate {
         if (!(query instanceof NamedTable)) {
             queryDisplay = "(" + queryDisplay + ") AS " + query.getQueryName();
         }
+        String pred = predicate instanceof Hole ? "<HOLE>" : predicate.toString();
         String tab = "\t".repeat(depth * 2);
         StringBuilder builder = new StringBuilder("SELECT " + columnsProjectionString() + "\n");
         builder.append(tab).append("FROM   ").append(queryDisplay).append("\n");
-        builder.append(tab).append("WHERE  ").append(predicate);
+        builder.append(tab).append("WHERE  ").append(pred);
         return builder.toString();
     }
 

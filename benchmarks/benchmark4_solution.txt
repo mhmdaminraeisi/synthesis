@@ -1,0 +1,23 @@
+candidate abstract queries:
+
+SELECT id, COUNT(*) AS count
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+GROUP BY id
+HAVING <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT id, COUNT(*) AS count
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+GROUP BY id
+HAVING TRUE
+
+
+_________________________________________________________
+time: 7.643 seconds

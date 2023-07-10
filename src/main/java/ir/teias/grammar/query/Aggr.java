@@ -2,6 +2,7 @@ package ir.teias.grammar.query;
 
 import ir.teias.SQLManager;
 import ir.teias.grammar.aggregator.Aggregator;
+import ir.teias.grammar.predicate.Hole;
 import ir.teias.grammar.predicate.Predicate;
 import ir.teias.grammar.predicate.True;
 import ir.teias.grammar.value.Column;
@@ -56,11 +57,13 @@ public class Aggr extends QueryWithPredicate {
         if (!(query instanceof NamedTable)) {
             queryDisplay = "(" + queryDisplay + ") " + query.getQueryName();
         }
+
+        String pred = predicate instanceof Hole ? "<HOLE>" : predicate.toString();
         String tab = "\t".repeat(depth * 2);
         StringBuilder builder = new StringBuilder("SELECT " + columnNames() + ", " + aggregator.toString() + "\n");
         builder.append(tab).append("FROM   ").append(queryDisplay).append("\n");
         builder.append(tab).append("GROUP BY ").append(columnNames()).append("\n");
-        builder.append(tab).append("HAVING ").append(predicate);
+        builder.append(tab).append("HAVING ").append(pred);
         return builder.toString();
     }
 
