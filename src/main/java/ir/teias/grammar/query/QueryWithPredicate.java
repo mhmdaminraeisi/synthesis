@@ -23,9 +23,6 @@ import java.util.List;
 public abstract class QueryWithPredicate extends Query {
     protected final Predicate predicate;
 
-    @Setter
-    protected HashMap<CellType, List<Cell<?>>> constantsByType;
-
     public QueryWithPredicate(Predicate predicate, List<String> projectColumns) {
         super(projectColumns);
         this.predicate = predicate;

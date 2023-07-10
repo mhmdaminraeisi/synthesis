@@ -15,6 +15,7 @@ import ir.teias.model.cell.Cell;
 import ir.teias.model.cell.DateCell;
 import ir.teias.model.cell.IntegerCell;
 import ir.teias.synthesizer.Synthesizer;
+import org.apache.catalina.AccessLog;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,18 +30,19 @@ public class Main {
         try {
             int counter = 1;
             while (true) {
-                System.out.println("synthesis benchmark " + counter);
                 String path = "benchmarks/benchmark" + counter + ".txt";
                 File file = new File(path);
                 if (!file.exists()) {
                     break;
                 }
+                System.out.println("synthesis benchmark " + counter);
                 String solPath = "benchmarks/benchmark" + counter + "_solution.txt";
                 InputAPI api = fileScanner.read(path);
                 PrintWriter writer = new PrintWriter(solPath, "UTF-8");
                 for (var table : api.getInputs()) {
                     table.saveToDb();
                 }
+                api.getOutput().saveToDb();
                 Synthesizer synthesizer = new Synthesizer(api.getInputs(), api.getOutput(),
                         api.getConstantsByType(), api.getAggregators(), api.isUseProjection(), api.isMultipleGroupBy());
                 String result = synthesizer.synthesis();

@@ -1,0 +1,27 @@
+candidate abstract queries:
+
+SELECT *
+FROM   t1
+WHERE  <HOLE>
+UNION
+SELECT *
+FROM   t2
+WHERE  <HOLE>
+
+
+
+_________________________________________________________
+solutions: 
+
+SELECT *
+FROM   t1
+WHERE  TRUE
+UNION
+SELECT *
+FROM   t2
+WHERE  TRUE
+
+
+
+_________________________________________________________
+time: 0.162 seconds

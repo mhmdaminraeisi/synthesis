@@ -1,23 +1,23 @@
 candidate abstract queries:
 
-SELECT id, COUNT(*) AS count
+SELECT conversation_id, from_user, SUM(timestamp) AS sum_timestamp
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-GROUP BY id
+GROUP BY conversation_id, from_user
 HAVING <HOLE>
 
 
 _________________________________________________________
 solutions: 
 
-SELECT id, COUNT(*) AS count
+SELECT conversation_id, from_user, SUM(timestamp) AS sum_timestamp
 FROM   (SELECT *
 		FROM   t1
 		WHERE  TRUE) t2
-GROUP BY id
+GROUP BY conversation_id, from_user
 HAVING TRUE
 
 
 _________________________________________________________
-time: 7.857 seconds
+time: 63.712 seconds

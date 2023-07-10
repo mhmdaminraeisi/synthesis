@@ -4,9 +4,11 @@ import ir.teias.SQLManager;
 import ir.teias.Utils;
 import ir.teias.model.BitVector;
 import ir.teias.model.Table;
+import ir.teias.model.cell.Cell;
 import ir.teias.model.cell.CellType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,9 @@ public abstract class Query {
     private final String queryName = Utils.generateRandomString(6);
     protected final List<String> projectColumns;
     protected boolean isFullVersion = false;
+
+    @Setter
+    protected HashMap<CellType, List<Cell<?>>> constantsByType;
 
     public Table evaluate() {
         return SQLManager.evaluate(this.toString(), queryName);

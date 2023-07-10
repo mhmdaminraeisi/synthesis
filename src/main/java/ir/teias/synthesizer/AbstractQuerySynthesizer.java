@@ -62,9 +62,37 @@ public class AbstractQuerySynthesizer {
         generatedAbstractQueries.addAll(generateSelectAbstractQueries(newQueries, useProj));
         generatedAbstractQueries.addAll(generateJoinAbstractQueries(newQueries, preQueries, useProj));
         generatedAbstractQueries.addAll(generateAggrAbstractQueries(newQueries, multipleColumn, lastDepth));
+        generatedAbstractQueries.addAll(generateUnionAbstractQueries(newQueries, preQueries));
         return generatedAbstractQueries;
     }
 
+    private List<Union> generateUnionAbstractQueries(List<Query> newQueries, List<Query> preQueries) {
+        List<Union> unions = new ArrayList<>();
+        for (int i = 0; i < newQueries.size(); i++) {
+            Query newQuery = newQueries.get(i);
+            if (newQuery instanceof NamedTable) {
+                continue;
+            }
+            for (int j = i + 1; j < newQueries.size(); j++) {
+                Query rightQuery = newQueries.get(j);
+                if (rightQuery instanceof NamedTable) {
+                    continue;
+                }
+                if (newQuery.getAbstractTable().hasSameSchema(rightQuery.getAbstractTable())) {
+                    unions.add(new Union(newQuery, rightQuery));
+                }
+            }
+            for (Query query : preQueries) {
+                if (query instanceof NamedTable) {
+                    continue;
+                }
+                if (query.getAbstractTable().hasSameSchema(newQuery.getAbstractTable())) {
+                    unions.add(new Union(query, newQuery));
+                }
+            }
+        }
+        return unions;
+    }
 
     private List<Select> generateSelectAbstractQueries(List<Query> newQueries, boolean useProj) {
         List<Query> namedTableQueries = newQueries.stream().filter(q -> q instanceof NamedTable).toList();

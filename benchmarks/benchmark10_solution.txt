@@ -1,8 +1,13 @@
 candidate abstract queries:
 
-SELECT yrq
+SELECT *
 FROM   t1
 WHERE  <HOLE>
+UNION
+SELECT *
+FROM   t2
+WHERE  <HOLE>
+
 
 
 _________________________________________________________
@@ -10,8 +15,13 @@ solutions:
 
 SELECT *
 FROM   t1
-WHERE  (t1.start_date < '2013-02-01' AND t1.end_date > '2013-02-15')
+WHERE  t1.id = t1.uid
+UNION
+SELECT *
+FROM   t2
+WHERE  (t2.date = '2022-11-27' OR t2.uid = 3)
+
 
 
 _________________________________________________________
-time: 0.253 seconds
+time: 0.587 seconds

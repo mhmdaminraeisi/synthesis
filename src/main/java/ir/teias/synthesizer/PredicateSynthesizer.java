@@ -21,13 +21,9 @@ public class PredicateSynthesizer {
     private final HashMap<CellType, List<Cell<?>>> constantsByType;
 
     public List<Query> synthesisPredicates(List<Query> abstractQueries) {
-        for (Query query : abstractQueries) {
-            if (query instanceof QueryWithPredicate) {
-                ((QueryWithPredicate) query).setConstantsByType(constantsByType);
-            }
-        }
         List<BitVector> bitVectors = new ArrayList<>();
         for (Query query : abstractQueries) {
+            query.setConstantsByType(constantsByType);
             bitVectors.addAll(query.bitVectorDFS().stream().filter(bv -> bv.decode().equals(output)).toList());
         }
         return bitVectors.stream().map(BitVector::getQuery).toList();

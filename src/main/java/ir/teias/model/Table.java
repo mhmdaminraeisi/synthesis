@@ -114,7 +114,7 @@ public class Table {
         return true;
     }
 
-    private boolean hasSameSchema(Table that) {
+    public boolean hasSameSchema(Table that) {
         if (columns.size() != that.getColumns().size()) {
             return false;
         }

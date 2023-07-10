@@ -94,7 +94,6 @@ public class Select extends QueryWithPredicate {
     @Override
     public List<Predicate> enumeratePrimitivePredicates() {
         HashMap<CellType, List<String>> columnsByType = getColumnsByType();
-        List<String> idColumns = getIdColumns();
 
         List<Predicate> primitivesPredicates = new ArrayList<>();
         for (var entry : columnsByType.entrySet()) {
@@ -110,6 +109,15 @@ public class Select extends QueryWithPredicate {
             }
             List<Value> constantValues = constantsWithSameType.stream().map(Const::new).collect(Collectors.toList());
             primitivesPredicates.addAll(enumerateBinOpPredicates(columnValues, constantValues, false, false, isString));
+        }
+        List<Cell<?>> integerConstants = constantsByType.get(CellType.INTEGER);
+        if (integerConstants != null) {
+            List<String> idColumns = getIdColumns();
+            String tableName = query instanceof NamedTable ? ((NamedTable) query).getTable().getName() : getQueryName();
+            List<Value> idColumnsValue = idColumns.stream().map(idCol -> new Column(idCol, tableName)).collect(Collectors.toList());
+            primitivesPredicates.addAll(enumerateBinOpPredicates(idColumnsValue, idColumnsValue, true, true, false));
+            List<Value> constantValues = integerConstants.stream().map(Const::new).collect(Collectors.toList());
+            primitivesPredicates.addAll(enumerateBinOpPredicates(idColumnsValue, constantValues, false, true, false));
         }
         return primitivesPredicates;
     }

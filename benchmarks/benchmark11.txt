@@ -1,0 +1,32 @@
+t1:
+___________________________________________________________________
+| message_id | conversation_id | from_user | timestamp | message  |
+| INTEGER    |  INTEGER        | STRING    | INTEGER   | STRING   |
+___________________________________________________________________
+|    6       |       1743      |     yyy   |    999    | message  |
+|    2       |        145      |     xxx   |   10000   | message  |
+|    7       |        14       |     bbb   |    899    | message  |
+|    8       |        14       |     bbb   |    799    | message  |
+|    1       |       145       |     xxx   |    9000   | message  |
+|    5       |       1743      |      me   |    1200   | message  |
+___________________________________________________________________
+tout:
+_______________________________________________
+| conversation_id | from_user | sum_timestamp |
+|  INTEGER        | STRING    | INTEGER       |
+_______________________________________________
+|       1743      |     yyy   |    999        |
+|        145      |     xxx   |   19000       |
+|        14       |     bbb   |    1698       |
+|       1743      |      me   |    1200       |
+_______________________________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { SUM }
+use_projection = false
+multiple_group_by = true
