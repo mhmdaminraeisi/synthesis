@@ -1,6 +1,6 @@
 candidate abstract queries:
 
-SELECT *
+SELECT t3.ID, t4.ID2, t4.Fruit2
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t3
@@ -10,42 +10,26 @@ JOIN   (SELECT *
 ON     <HOLE>
 
 
-SELECT *
-FROM   (SELECT *
-		FROM   t1
-		WHERE  <HOLE>) t3
-JOIN   (SELECT oid, MAX(val) AS max_val
-		FROM   (SELECT *
-				FROM   t2
-				WHERE  <HOLE>) t4
-		GROUP BY oid
-		HAVING <HOLE>) t5
-ON     <HOLE>
-
-
 _________________________________________________________
 solutions: 
 
-SELECT *
+SELECT t3.ID, t4.ID2, t4.Fruit2
 FROM   (SELECT *
 		FROM   t1
-		WHERE  (t1.date = '2022-12-25' OR t1.date = '2022-12-24')) t3
-JOIN   (SELECT oid, MAX(val) AS max_val
-		FROM   (SELECT *
-				FROM   t2
-				WHERE  t2.val <> 50) t4
-		GROUP BY oid
-		HAVING TRUE) t5
-ON     t3.uid = t5.oid
+		WHERE  TRUE) t3
+JOIN   (SELECT *
+		FROM   t2
+		WHERE  TRUE) t4
+ON     (t3.Fruit = t4.Fruit2 AND t3.ID < t4.ID2)
 
 
 _________________________________________________________
-time: 4.245 seconds
+time: 1.115 seconds
 _________________________________________________________
-visited abstract queries: 67
+visited abstract queries: 18
 _________________________________________________________
-candidate abstract queries: 2
+candidate abstract queries: 1
 _________________________________________________________
 solutions: 1
 _________________________________________________________
-depth: 3
+depth: 2

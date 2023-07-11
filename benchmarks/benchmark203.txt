@@ -1,0 +1,34 @@
+t1:
+______________________________________________________
+| id      |   home  |  datetime  | player | resource |
+| INTEGER | INTEGER | DATE       | STRING | INTEGER  |
+______________________________________________________
+| 1       |   10    | 2009-03-04 | john    | 199     |
+| 2       |   11    | 2009-03-04 | juliet  | 244     |
+| 5       |   12    | 2009-03-04 | borat   | 555     |
+| 3       |   10    | 2009-03-03 | john    | 300     |
+| 4       |   11    | 2009-03-03 | juliet  | 200     |
+| 6       |   12    | 2009-03-03 | borat   | 500     |
+| 7       |   13    | 2008-12-24 | borat   | 600     |
+| 8       |   13    | 2009-01-01 | borat   | 700     |
+______________________________________________________
+tout:
+______________________________________________________
+| id      |   home  |  datetime  | player | resource |
+| INTEGER | INTEGER | DATE       | STRING | INTEGER  |
+______________________________________________________
+| 1       |  10     | 2009-03-04 | john   | 199      |
+| 2       |  11     | 2009-03-04 | juliet | 244      |
+| 5       |  12     | 2009-03-04 | borat  | 555      |
+| 8       |  13     | 2009-01-01 | borat  | 700      |
+______________________________________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { MAX }
+use_projection = false
+multiple_group_by = false

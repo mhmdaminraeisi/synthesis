@@ -1,3 +1,5 @@
+//http://stackoverflow.com/questions/30064469/get-distinct-values-in-a-table
+
 t1:
 ________________________
 |  ErrorName | Value   |

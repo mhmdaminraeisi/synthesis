@@ -1,0 +1,32 @@
+//http://stackoverflow.com/questions/2411559/how-do-i-query-sql-for-a-latest-record-date-for-each-user
+
+t1:
+___________________________________
+| username |   date     | value   |
+| STRING   | DATE       | INTEGER |
+___________________________________
+| brad     | 2010-01-02 |  2      |
+| fred     | 2010-01-03 |  1      |
+| bob      | 2009-08-04 |  5      |
+| brad     | 2010-02-02 |  3      |
+| fred     | 2009-12-02 |  4      |
+___________________________________
+tout:
+____________________________________
+| username |   date      | value   |
+| STRING   | DATE        | INTEGER |
+____________________________________
+| fred     | 2010-01-03  |  1      |
+| bob      | 2009-08-04  |  5      |
+| brad     | 2010-02-02  |  3      |
+____________________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { MAX }
+use_projection = true
+multiple_group_by = false

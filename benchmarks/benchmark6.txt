@@ -1,3 +1,5 @@
+//http://stackoverflow.com/questions/1313120/retrieving-the-last-record-in-each-group
+
 t1:
 _______________________________
 | Id      |  Name  |  other   |

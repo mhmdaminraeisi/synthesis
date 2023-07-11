@@ -5,144 +5,138 @@ FROM   t1
 WHERE  <HOLE>
 
 
-SELECT t3.id, t3.min_rev, t4.content
-FROM   (SELECT id, MIN(rev) AS min_rev
+SELECT t3.Train, t4.Dest, t4.max_Time
+FROM   (SELECT Train, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY id
+		GROUP BY Train
 		HAVING <HOLE>) t3
-JOIN   (SELECT content, MIN(id) AS min_id
+JOIN   (SELECT Dest, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY content
+		GROUP BY Dest
 		HAVING <HOLE>) t4
 ON     <HOLE>
 
 
-SELECT t3.id, t3.min_rev, t4.content
-FROM   (SELECT id, MIN(rev) AS min_rev
+SELECT t2.Train, t2.Dest, t2.Time
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Train, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY id
+		GROUP BY Train
 		HAVING <HOLE>) t3
-JOIN   (SELECT content, MIN(rev) AS min_rev
+ON     <HOLE>
+
+
+SELECT t2.Train, t2.Dest, t3.max_Time
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Train, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY content
+		GROUP BY Train
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t3.max_Train, t4.Dest, t4.max_Time
+FROM   (SELECT Dest, MAX(Train) AS max_Train
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Dest
+		HAVING <HOLE>) t3
+JOIN   (SELECT Dest, MAX(Time) AS max_Time
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Dest
 		HAVING <HOLE>) t4
 ON     <HOLE>
 
 
-SELECT t2.id, t2.rev, t2.content
+SELECT t2.Train, t2.Dest, t2.Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-JOIN   (SELECT id, MIN(rev) AS min_rev
+JOIN   (SELECT Dest, MAX(Train) AS max_Train
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY id
+		GROUP BY Dest
 		HAVING <HOLE>) t3
 ON     <HOLE>
 
 
-SELECT t3.rev, t3.min_id, t4.content
-FROM   (SELECT rev, MIN(id) AS min_id
-		FROM   (SELECT *
-				FROM   t1
-				WHERE  <HOLE>) t2
-		GROUP BY rev
-		HAVING <HOLE>) t3
-JOIN   (SELECT content, MIN(id) AS min_id
-		FROM   (SELECT *
-				FROM   t1
-				WHERE  <HOLE>) t2
-		GROUP BY content
-		HAVING <HOLE>) t4
-ON     <HOLE>
-
-
-SELECT t3.rev, t3.min_id, t4.content
-FROM   (SELECT rev, MIN(id) AS min_id
-		FROM   (SELECT *
-				FROM   t1
-				WHERE  <HOLE>) t2
-		GROUP BY rev
-		HAVING <HOLE>) t3
-JOIN   (SELECT content, MIN(rev) AS min_rev
-		FROM   (SELECT *
-				FROM   t1
-				WHERE  <HOLE>) t2
-		GROUP BY content
-		HAVING <HOLE>) t4
-ON     <HOLE>
-
-
-SELECT t2.id, t2.rev, t2.content
+SELECT t2.Train, t2.Dest, t2.Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-JOIN   (SELECT rev, MIN(id) AS min_id
+JOIN   (SELECT Dest, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY rev
+		GROUP BY Dest
 		HAVING <HOLE>) t3
 ON     <HOLE>
 
 
-SELECT t2.id, t2.rev, t2.content
+SELECT t2.Train, t3.Dest, t3.max_Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-JOIN   (SELECT content, MIN(id) AS min_id
+JOIN   (SELECT Dest, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY content
+		GROUP BY Dest
 		HAVING <HOLE>) t3
 ON     <HOLE>
 
 
-SELECT t2.id, t2.rev, t3.content
+SELECT t2.Train, t2.Dest, t3.max_Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-JOIN   (SELECT content, MIN(id) AS min_id
+JOIN   (SELECT Dest, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY content
+		GROUP BY Dest
 		HAVING <HOLE>) t3
 ON     <HOLE>
 
 
-SELECT t2.id, t2.rev, t2.content
+SELECT t2.Train, t2.Dest, t2.Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-JOIN   (SELECT content, MIN(rev) AS min_rev
+JOIN   (SELECT Time, MAX(Train) AS max_Train
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY content
+		GROUP BY Time
 		HAVING <HOLE>) t3
 ON     <HOLE>
 
 
-SELECT t2.id, t2.rev, t3.content
+SELECT t2.Train, t2.Dest, t3.Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  <HOLE>) t2
-JOIN   (SELECT content, MIN(rev) AS min_rev
+JOIN   (SELECT Time, MAX(Train) AS max_Train
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  <HOLE>) t2
-		GROUP BY content
+		GROUP BY Time
 		HAVING <HOLE>) t3
 ON     <HOLE>
 
@@ -150,39 +144,55 @@ ON     <HOLE>
 _________________________________________________________
 solutions: 
 
-SELECT t2.id, t2.rev, t2.content
+SELECT t3.Train, t5.Dest, t5.max_Time
+FROM   (SELECT Train, MAX(Time) AS max_Time
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t2
+		GROUP BY Train
+		HAVING TRUE) t3
+JOIN   (SELECT Dest, MAX(Time) AS max_Time
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t4
+		GROUP BY Dest
+		HAVING TRUE) t5
+ON     t3.max_Time = t5.max_Time
+
+
+SELECT t2.Train, t2.Dest, t2.Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  TRUE) t2
-JOIN   (SELECT id, MIN(rev) AS min_rev
+JOIN   (SELECT Train, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  TRUE) t3
-		GROUP BY id
+		GROUP BY Train
 		HAVING TRUE) t4
-ON     (t2.rev = t4.min_rev AND t2.id = t4.id)
+ON     t2.Time = t4.max_Time
 
 
-SELECT t2.id, t2.rev, t2.content
+SELECT t2.Train, t2.Dest, t4.max_Time
 FROM   (SELECT *
 		FROM   t1
 		WHERE  TRUE) t2
-JOIN   (SELECT id, MIN(rev) AS min_rev
+JOIN   (SELECT Train, MAX(Time) AS max_Time
 		FROM   (SELECT *
 				FROM   t1
 				WHERE  TRUE) t3
-		GROUP BY id
+		GROUP BY Train
 		HAVING TRUE) t4
-ON     (t2.rev = t4.min_rev AND t2.id <> t4.id)
+ON     t2.Time = t4.max_Time
 
 
 _________________________________________________________
-time: 6.494 seconds
+time: 11.8 seconds
 _________________________________________________________
 visited abstract queries: 221
 _________________________________________________________
 candidate abstract queries: 11
 _________________________________________________________
-solutions: 2
+solutions: 3
 _________________________________________________________
 depth: 3

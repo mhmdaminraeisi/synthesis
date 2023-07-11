@@ -1,0 +1,31 @@
+//http://stackoverflow.com/questions/33063073/postgresql-max-value-for-every-user
+
+t1:
+______________________________
+| User   | Phone   | Value   |
+| STRING | INTEGER | INTEGER |
+______________________________
+| Peter  | 0       | 1       |
+| Peter  | 456     | 2       |
+| Peter  | 456     | 3       |
+| Paul   | 456     | 7       |
+| Paul   | 789     | 10      |
+______________________________
+tout:
+______________________________
+|  c1    | c2      | c3      |
+| STRING | INTEGER | INTEGER |
+______________________________
+| Peter  | 456     | 3       |
+| Paul   | 456     | 7       |
+______________________________
+
+int_constants = { 8 }
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { MAX }
+use_projection = true
+multiple_group_by = false

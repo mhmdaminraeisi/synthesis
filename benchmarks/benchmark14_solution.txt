@@ -1,0 +1,265 @@
+candidate abstract queries:
+
+SELECT *
+FROM   t1
+WHERE  <HOLE>
+
+
+SELECT t3.username, t3.max_date, t4.max_value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+JOIN   (SELECT username, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.username, t4.date, t4.max_value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY date
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.username, t3.max_date, t4.max_value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY date
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.username, t3.max_date, t4.value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+JOIN   (SELECT value, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY value
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t2.value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t3.username, t4.date, t4.max_value
+FROM   (SELECT username, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY date
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t2.value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT username, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t3.max_value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT username, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY username
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t2.value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY date
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.username, t3.date, t3.max_value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY date
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t3.max_value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY date
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t2.value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT value, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY value
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.username, t2.date, t3.value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT value, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY value
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT t3.username, t5.date, t5.max_value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t2
+		GROUP BY username
+		HAVING TRUE) t3
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t4
+		GROUP BY date
+		HAVING TRUE) t5
+ON     t3.max_date = t5.date
+
+
+SELECT t3.username, t3.max_date, t5.max_value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t2
+		GROUP BY username
+		HAVING TRUE) t3
+JOIN   (SELECT date, MAX(value) AS max_value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t4
+		GROUP BY date
+		HAVING TRUE) t5
+ON     t3.max_date = t5.date
+
+
+SELECT t3.username, t3.max_date, t5.value
+FROM   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t2
+		GROUP BY username
+		HAVING TRUE) t3
+JOIN   (SELECT value, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t4
+		GROUP BY value
+		HAVING TRUE) t5
+ON     t3.max_date = t5.max_date
+
+
+SELECT t2.username, t2.date, t2.value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+JOIN   (SELECT username, MAX(date) AS max_date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t3
+		GROUP BY username
+		HAVING TRUE) t4
+ON     t2.date = t4.max_date
+
+
+_________________________________________________________
+time: 10.945 seconds
+_________________________________________________________
+visited abstract queries: 219
+_________________________________________________________
+candidate abstract queries: 14
+_________________________________________________________
+solutions: 4
+_________________________________________________________
+depth: 3

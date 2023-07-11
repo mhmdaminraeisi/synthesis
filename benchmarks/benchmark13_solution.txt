@@ -1,0 +1,87 @@
+candidate abstract queries:
+
+SELECT t3.Emp_ID2, t3.Sale_Date, t5.max_Promo_Date
+FROM   (SELECT *
+		FROM   t2
+		WHERE  <HOLE>) t3
+JOIN   (SELECT Emp_ID, MAX(Promo_Date) AS max_Promo_Date
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t4
+		GROUP BY Emp_ID
+		HAVING <HOLE>) t5
+ON     <HOLE>
+
+
+SELECT t3.Emp_ID2, t3.Sale_Date, t5.Promo_Date
+FROM   (SELECT *
+		FROM   t2
+		WHERE  <HOLE>) t3
+JOIN   (SELECT Promo_Date, MAX(Emp_ID) AS max_Emp_ID
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t4
+		GROUP BY Promo_Date
+		HAVING <HOLE>) t5
+ON     <HOLE>
+
+
+SELECT t4.Emp_ID2, t4.max_Sale_Date, t5.Promo_Date
+FROM   (SELECT Emp_ID2, MAX(Sale_Date) AS max_Sale_Date
+		FROM   (SELECT *
+				FROM   t2
+				WHERE  <HOLE>) t3
+		GROUP BY Emp_ID2
+		HAVING <HOLE>) t4
+JOIN   (		SELECT *
+		FROM   t1
+		WHERE  <HOLE>
+		UNION
+		SELECT *
+		FROM   t2
+		WHERE  <HOLE>
+) t5
+ON     <HOLE>
+
+
+SELECT t3.Emp_ID2, t3.Sale_Date, t4.Promo_Date
+FROM   (SELECT *
+		FROM   t2
+		WHERE  <HOLE>) t3
+JOIN   (		SELECT *
+		FROM   t1
+		WHERE  <HOLE>
+		UNION
+		SELECT *
+		FROM   t2
+		WHERE  <HOLE>
+) t4
+ON     <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT t3.Emp_ID2, t3.Sale_Date, t5.Promo_Date
+FROM   (SELECT *
+		FROM   t2
+		WHERE  TRUE) t3
+JOIN   (SELECT Promo_Date, MAX(Emp_ID) AS max_Emp_ID
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t4
+		GROUP BY Promo_Date
+		HAVING TRUE) t5
+ON     (t3.Sale_Date < t5.Promo_Date AND t3.Emp_ID2 = t5.max_Emp_ID)
+
+
+_________________________________________________________
+time: 8.94 seconds
+_________________________________________________________
+visited abstract queries: 318
+_________________________________________________________
+candidate abstract queries: 4
+_________________________________________________________
+solutions: 1
+_________________________________________________________
+depth: 3

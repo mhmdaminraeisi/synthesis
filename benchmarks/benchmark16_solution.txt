@@ -1,0 +1,243 @@
+candidate abstract queries:
+
+SELECT *
+FROM   t1
+WHERE  <HOLE>
+
+
+SELECT t3.User, t3.max_Phone, t4.max_Value
+FROM   (SELECT User, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+JOIN   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.User, t4.Phone, t4.max_Value
+FROM   (SELECT User, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+JOIN   (SELECT Phone, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Phone
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.User, t3.max_Phone, t4.max_Value
+FROM   (SELECT User, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+JOIN   (SELECT Phone, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Phone
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t3.User, t3.max_Phone, t4.Value
+FROM   (SELECT User, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+JOIN   (SELECT Value, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Value
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t2.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT User, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t3.User, t4.Phone, t4.max_Value
+FROM   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+JOIN   (SELECT Phone, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Phone
+		HAVING <HOLE>) t4
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t2.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t3.max_Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY User
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t2.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Phone, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Phone
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.User, t3.Phone, t3.max_Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Phone, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Phone
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t3.max_Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Phone, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Phone
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t2.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Value, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Value
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+SELECT t2.User, t2.Phone, t3.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  <HOLE>) t2
+JOIN   (SELECT Value, MAX(Phone) AS max_Phone
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  <HOLE>) t2
+		GROUP BY Value
+		HAVING <HOLE>) t3
+ON     <HOLE>
+
+
+_________________________________________________________
+solutions: 
+
+SELECT t2.User, t2.Phone, t2.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+JOIN   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  t1.Value < 8) t3
+		GROUP BY User
+		HAVING TRUE) t4
+ON     t2.Value = t4.max_Value
+
+
+SELECT t2.User, t2.Phone, t2.Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  t1.Value < 8) t2
+JOIN   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  TRUE) t3
+		GROUP BY User
+		HAVING TRUE) t4
+ON     (t2.Value = t4.max_Value OR t2.Value > t4.max_Value)
+
+
+SELECT t2.User, t2.Phone, t4.max_Value
+FROM   (SELECT *
+		FROM   t1
+		WHERE  TRUE) t2
+JOIN   (SELECT User, MAX(Value) AS max_Value
+		FROM   (SELECT *
+				FROM   t1
+				WHERE  t1.Value < 8) t3
+		GROUP BY User
+		HAVING TRUE) t4
+ON     t2.Value = t4.max_Value
+
+
+_________________________________________________________
+time: 23.377 seconds
+_________________________________________________________
+visited abstract queries: 221
+_________________________________________________________
+candidate abstract queries: 14
+_________________________________________________________
+solutions: 3
+_________________________________________________________
+depth: 3

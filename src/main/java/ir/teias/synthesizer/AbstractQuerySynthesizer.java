@@ -23,12 +23,6 @@ public class AbstractQuerySynthesizer {
     private final boolean useProjection;
     private final boolean multipleColumn;
 
-    public List<Query> filterCandidates(List<Query> queries) {
-        return queries.stream().filter(
-                query -> query.evaluateAbstract().contains(output)
-        ).toList();
-    }
-
     public List<Query> synthesisAbstractQueries(int depth) {
         List<Query> newQueries = new ArrayList<>();
         for (Table table : inputs) {
@@ -40,20 +34,11 @@ public class AbstractQuerySynthesizer {
         List<Query> preQueries = new ArrayList<>();
         int d = 1;
         while (d++ < depth) {
-            newQueries = enumOneStepAbstractQuery(newQueries, preQueries, useProjection && d == depth, d == depth).stream().filter(
-                    newQuery -> {
-                        for (Query query : abstractQueries) {
-                            if (query.evaluateAbstract().equals(newQuery.evaluateAbstract())) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-            ).toList();
+            newQueries = enumOneStepAbstractQuery(newQueries, preQueries, useProjection && d == depth, d == depth);
             preQueries = new ArrayList<>(abstractQueries);
             abstractQueries.addAll(newQueries);
         }
-        return filterCandidates(abstractQueries);
+        return abstractQueries;
     }
 
     private List<Query> enumOneStepAbstractQuery(List<Query> newQueries, List<Query> preQueries, boolean useProj, boolean lastDepth) {

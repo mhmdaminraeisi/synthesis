@@ -18,7 +18,10 @@ public class FileScanner {
             List<Table> inputTables = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
 
+            br.readLine();
+            br.readLine();
             String line = br.readLine();
+
             int tableId = 1;
             while (!line.contains("tout")) {
                 inputTables.add(readTable(br, "t" + tableId));
@@ -42,7 +45,7 @@ public class FileScanner {
                 constantsByType.put(CellType.INTEGER, integers);
             }
 
-            line = br.readLine();
+            br.readLine();
             // TODO double
 
             line = br.readLine();

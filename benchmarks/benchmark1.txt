@@ -1,3 +1,5 @@
+// The paper example
+
 t1:
 _________________________________
 | id     | date       | uid     |

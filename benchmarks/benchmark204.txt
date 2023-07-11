@@ -1,0 +1,29 @@
+t1:
+_________________________________
+| id      | country | status    |
+| INTEGER | STRING  | STRING    |
+_________________________________
+| 1       | SE      | TREATED   |
+| 2       | DK      | UNTREATED |
+| 3       | SE      | UNTREATED |
+| 4       | DE      | TREATED   |
+_________________________________
+tout:
+_________________________________
+| id      | country | status    |
+| INTEGER | STRING  | STRING    |
+_________________________________
+| 1       | SE      | TREATED   |
+| 2       | DK      | UNTREATED |
+| 3       | SE      | UNTREATED |
+_________________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = { UNTREATED }
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = {}
+use_projection = true
+multiple_group_by = false

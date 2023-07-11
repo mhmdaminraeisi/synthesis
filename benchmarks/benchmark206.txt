@@ -1,0 +1,30 @@
+//http://stackoverflow.com/questions/37868704/how-to-return-1-row-for-each-distinct-value-in-a-given-column-in-oracle
+
+t1:
+__________________________________
+| NBR     | ID      | DT         |
+| INTEGER | INTEGER | DATE       |
+__________________________________
+| 1       | 1       | 2001-12-01 |
+| 1       | 2       | 2001-01-01 |
+| 2       | 3       | 2001-01-01 |
+| 2       | 4       | 2001-01-02 |
+__________________________________
+tout:
+__________________________________
+| NBR     | ID      | DT         |
+| INTEGER | INTEGER | DATE       |
+__________________________________
+| 1       | 2       | 2001-01-01 |
+| 2       | 3       | 2001-01-01 |
+__________________________________
+
+int_constants = {}
+double_constants = {}
+string_constants = {}
+date_constants = {}
+time_constants = {}
+
+aggregation_functions = { MIN }
+use_projection = false
+multiple_group_by = false
